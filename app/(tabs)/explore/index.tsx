@@ -97,6 +97,7 @@ export default function ExploreScreen() {
 
       {activeTab === 'haircuts' ? (
         <FlatList
+          key="haircuts-grid"
           data={filteredHaircuts}
           keyExtractor={(item) => item._id}
           numColumns={2}
@@ -121,8 +122,8 @@ export default function ExploreScreen() {
       ) : (
         <FlatList
         key="offers-list" // Add unique key here
-        data={filteredOffers}
-        keyExtractor={(item) => item._id}
+          data={filteredOffers}
+          keyExtractor={(item) => item._id}
         numColumns={1}
           contentContainerStyle={styles.listContent}
           refreshControl={<RefreshControl refreshing={loading} onRefresh={loadCatalog} tintColor={colors.primaryAccent} />}
