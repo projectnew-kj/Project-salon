@@ -56,7 +56,6 @@ export default function TabsLayout() {
         name="banners/index"
         options={{
           title: 'Banners',
-          href: null,
           tabBarIcon: ({ color, size }) => <ImageIcon size={size} color={color} />,
         }}
       />

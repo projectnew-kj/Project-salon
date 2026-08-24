@@ -95,7 +95,7 @@ export default function AdminSettingsScreen() {
           <ChevronRight size={18} color={colors.textMuted} />
         </TouchableOpacity>
 
-        {/* <View style={[styles.divider, { backgroundColor: colors.border }]} />
+        <View style={[styles.divider, { backgroundColor: colors.border }]} />
 
         <TouchableOpacity style={styles.menuRow} onPress={() => router.push('/(tabs)/banners')}>
           <View style={styles.menuLeft}>
@@ -103,7 +103,7 @@ export default function AdminSettingsScreen() {
             <Text style={[styles.menuText, { color: colors.text }]}>Promotional Banners</Text>
           </View>
           <ChevronRight size={18} color={colors.textMuted} />
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
 
       {/* Account */}
