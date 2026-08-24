@@ -1,0 +1,13 @@
+node_modules/
+.env
+npm-debug.log
+yarn-error.log
+dist/
+coverage/
+.DS_Store
+*.log
+android/
+.claude/
+.expo/
+ios/
+.vscode/
