@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "Salon & Style",
+    "slug": "salon-user-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "scheme": "salonuser",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#D97706"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.salonapp.user"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#D97706"
+      },
+      "package": "com.salonapp.user"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": ["expo-router", "expo-secure-store"],
+    "experiments": {
+      "typedRoutes": false
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      }
+    }
+  }
+}
