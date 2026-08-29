@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { Plus, Scissors, Gift, Edit2, Trash2, Clock } from 'lucide-react-native';
 import { useThemeStore } from '../../../src/store/useThemeStore';
 import apiClient from '../../../src/api/apiClient';
+import { EmptyState } from '@/components/common/EmptyState';
 
 export default function AdminServicesScreen() {
   const { colors } = useThemeStore();
@@ -123,6 +124,12 @@ export default function AdminServicesScreen() {
               </View>
             </View>
           )}
+          ListEmptyComponent={
+            <EmptyState
+              title="No Haircuts yet"
+              subtitle="Create your first haircut to attract more customers!"
+            />
+          }
         />
       ) : (
         <FlatList
@@ -145,6 +152,12 @@ export default function AdminServicesScreen() {
               </View>
             </View>
           )}
+          ListEmptyComponent={
+            <EmptyState
+              title="No offers yet"
+              subtitle="Create your first offer to attract more customers!"
+            />
+          }
         />
       )}
     </View>

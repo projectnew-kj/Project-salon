@@ -54,7 +54,7 @@ export default function AdminBookingDetailScreen() {
   }
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.background }]} contentContainerStyle={styles.content}>
+    <ScrollView style={[styles.container, { backgroundColor: colors.background }]} contentContainerStyle={styles.content} keyboardShouldPersistTaps="always">
       <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}>
         <View style={styles.headerRow}>
           <Text style={[styles.bookingCode, { color: colors.text }]}>{booking.bookingCode}</Text>

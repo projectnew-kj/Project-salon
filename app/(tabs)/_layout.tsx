@@ -18,6 +18,7 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
+        tabBarHideOnKeyboard: true,
         tabBarActiveTintColor: colors.primaryAccent,
         tabBarInactiveTintColor: colors.textMuted,
         tabBarStyle: {
@@ -53,7 +54,7 @@ export default function TabsLayout() {
       />
       {/* Changed 'banners' to 'banners/index' */}
       <Tabs.Screen
-        name="banners/index"
+        name="banners"
         options={{
           title: 'Banners',
           tabBarIcon: ({ color, size }) => <ImageIcon size={size} color={color} />,
@@ -61,7 +62,7 @@ export default function TabsLayout() {
       />
       {/* Changed 'schedule' to 'schedule/index' */}
       <Tabs.Screen
-        name="schedule/index"
+        name="schedule"
         options={{
           title: 'Schedule',
           tabBarIcon: ({ color, size }) => <Clock size={size} color={color} />,

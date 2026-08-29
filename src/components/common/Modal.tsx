@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 20,
+    height: "94%"
   },
 });
 
