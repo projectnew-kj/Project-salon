@@ -59,7 +59,7 @@ export default function HaircutModalScreen() {
   };
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.background }]} contentContainerStyle={styles.content} keyboardShouldPersistTaps="always">
+    <ScrollView style={[styles.container, { backgroundColor: colors.background }]} contentContainerStyle={styles.content} keyboardShouldPersistTaps="always" showsVerticalScrollIndicator={false}>
       <Text style={[styles.title, { color: colors.text }]}>{isEditing ? 'Edit Service' : 'Add Haircut Service'}</Text>
 
       <Input label="Haircut Name" placeholder="e.g. Skin Fade" value={name} onChangeText={setName} />

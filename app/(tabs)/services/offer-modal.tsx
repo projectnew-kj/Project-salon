@@ -101,7 +101,7 @@ export default function OfferModalScreen() {
   };
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.background }]} contentContainerStyle={styles.content} keyboardShouldPersistTaps="always">
+    <ScrollView style={[styles.container, { backgroundColor: colors.background }]} contentContainerStyle={styles.content} keyboardShouldPersistTaps="always" showsVerticalScrollIndicator={false}>
       <Text style={[styles.title, { color: colors.text }]}>{isEditing ? 'Edit Offer' : 'Add Offer Bundle'}</Text>
 
       <Input label="Offer Title" placeholder="e.g. Grooming Combo" value={title} onChangeText={setTitle} />

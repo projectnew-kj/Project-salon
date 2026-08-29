@@ -58,6 +58,7 @@ export default function AdminBookingsScreen() {
       {/* Horizontal Status Filter Chips */}
       <View style={styles.tabsContainer}>
         <FlatList
+          showsVerticalScrollIndicator={false}
           horizontal
           showsHorizontalScrollIndicator={false}
           data={STATUS_TABS}
@@ -95,6 +96,7 @@ export default function AdminBookingsScreen() {
 
       {/* Bookings Stream List */}
         <FlatList
+          showsVerticalScrollIndicator={false}
           data={bookings}
           keyExtractor={(item) => item._id}
           refreshing={isLoading}

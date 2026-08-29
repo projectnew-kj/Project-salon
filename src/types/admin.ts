@@ -56,3 +56,17 @@ export interface PaginatedMeta {
   page: number;
   totalPages: number;
 }
+
+export interface OperatingBreak {
+  startTime: string;
+  endTime: string;
+  label?: string;
+}
+
+export interface WeeklyDaySchedule {
+  day: string;
+  isOpen: boolean;
+  scheduleType: string;
+  slots: Array<{ startTime: string; endTime: string; slotDurationMinutes?: number; maxConcurrentBookings?: number }>;
+  breaks: OperatingBreak[];
+}

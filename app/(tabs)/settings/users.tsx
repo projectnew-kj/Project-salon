@@ -67,6 +67,7 @@ export default function AdminCustomersScreen() {
       </View>
 
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={users}
         keyExtractor={(item) => item._id}
         refreshControl={<RefreshControl refreshing={loading} onRefresh={fetchUsers} tintColor={colors.primaryAccent} />}

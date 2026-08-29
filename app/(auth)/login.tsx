@@ -44,7 +44,7 @@ export default function AdminLoginScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={[styles.container, { backgroundColor: colors.background }]}
     >
-      <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="always">
+      <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="always" showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <View style={[styles.iconCircle, { backgroundColor: colors.surfaceSecondary }]}>
             <ShieldCheck size={48} color={colors.primaryAccent} />

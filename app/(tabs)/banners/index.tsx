@@ -177,6 +177,7 @@ export default function AdminBannersScreen() {
       </View>
 
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={banners}
         keyExtractor={(item) => item._id}
         refreshControl={<RefreshControl refreshing={loading} onRefresh={fetchBanners} tintColor={colors.primaryAccent} />}

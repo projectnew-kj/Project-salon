@@ -92,6 +92,7 @@ export default function AdminServicesScreen() {
       {/* List Rendering */}
       {activeTab === 'haircuts' ? (
         <FlatList
+          showsVerticalScrollIndicator={false}
           data={haircuts}
           keyExtractor={(item) => item._id}
           refreshControl={<RefreshControl refreshing={loading} onRefresh={fetchData} tintColor={colors.primaryAccent} />}
@@ -133,6 +134,7 @@ export default function AdminServicesScreen() {
         />
       ) : (
         <FlatList
+          showsVerticalScrollIndicator={false}
           data={offers}
           keyExtractor={(item) => item._id}
           refreshControl={<RefreshControl refreshing={loading} onRefresh={fetchData} tintColor={colors.primaryAccent} />}
