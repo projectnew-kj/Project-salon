@@ -97,6 +97,7 @@ export default function ExploreScreen() {
 
       {activeTab === 'haircuts' ? (
         <FlatList
+          showsVerticalScrollIndicator={false}
           key="haircuts-grid"
           data={filteredHaircuts}
           keyExtractor={(item) => item._id}
@@ -121,6 +122,7 @@ export default function ExploreScreen() {
         />
       ) : (
         <FlatList
+          showsVerticalScrollIndicator={false}
         key="offers-list" // Add unique key here
           data={filteredOffers}
           keyExtractor={(item) => item._id}

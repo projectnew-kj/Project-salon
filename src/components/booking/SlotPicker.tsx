@@ -16,6 +16,7 @@ interface SlotPickerProps {
   loading: boolean;
   isOpen: boolean;
   closureReason?: string;
+  breaks?: { startTime: string; endTime: string; label?: string }[];
 }
 
 export const SlotPicker: React.FC<SlotPickerProps> = ({
@@ -25,6 +26,7 @@ export const SlotPicker: React.FC<SlotPickerProps> = ({
   loading,
   isOpen,
   closureReason,
+  breaks = [],
 }) => {
   const { colors } = useThemeStore();
 
@@ -57,7 +59,18 @@ export const SlotPicker: React.FC<SlotPickerProps> = ({
   }
 
   return (
-    <View style={styles.gridContainer}>
+    <View>
+      {breaks.length > 0 && (
+        <View style={styles.breakInfo}>
+          <Text style={[styles.breakInfoTitle, { color: colors.text }]}>Breaks</Text>
+          {breaks.map((item, index) => (
+            <Text key={`${item.startTime}-${item.endTime}-${index}`} style={[styles.breakInfoText, { color: colors.textSecondary }]}>
+              {item.label || 'Break'}: {item.startTime} - {item.endTime}
+            </Text>
+          ))}
+        </View>
+      )}
+      <View style={styles.gridContainer}>
       {slots.map((slot) => {
         const isSelected = selectedSlot === slot.time;
         const isDisabled = !slot.isAvailable;
@@ -104,6 +117,7 @@ export const SlotPicker: React.FC<SlotPickerProps> = ({
           </TouchableOpacity>
         );
       })}
+      </View>
     </View>
   );
 };
@@ -114,6 +128,9 @@ const styles = StyleSheet.create({
   closureBox: { padding: 16, borderRadius: 12, borderWidth: 1, alignItems: 'center', marginVertical: 8 },
   closureTitle: { fontSize: 15, fontWeight: '700', marginBottom: 4 },
   closureText: { fontSize: 13, textAlign: 'center' },
+  breakInfo: { padding: 10, borderRadius: 10, marginTop: 8, marginBottom: 2 },
+  breakInfoTitle: { fontSize: 12, fontWeight: '700', marginBottom: 3 },
+  breakInfoText: { fontSize: 11, marginBottom: 2 },
   gridContainer: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 8 },
   slotCard: {
     width: '31%',

@@ -15,9 +15,17 @@ export const useUserSocket = ({
   onNewNotification,
 }: UseUserSocketProps = {}) => {
   const socketRef = useRef<Socket | null>(null);
+  const bookingStatusCallbackRef = useRef(onBookingStatusUpdated);
+  const notificationCallbackRef = useRef(onNewNotification);
+  bookingStatusCallbackRef.current = onBookingStatusUpdated;
+  notificationCallbackRef.current = onNewNotification;
   const { accessToken, isAuthenticated } = useUserAuthStore();
 
   useEffect(() => {
+    if (!isAuthenticated || !accessToken) {
+      return;
+    }
+
     const socket = io(Config.SOCKET_URL, {
       auth: { token: accessToken || '' },
       transports: ['websocket'],
@@ -34,14 +42,14 @@ export const useUserSocket = ({
     });
 
     socket.on('booking:status_updated', (data) => {
-      if (onBookingStatusUpdated) {
-        onBookingStatusUpdated(data);
+      if (bookingStatusCallbackRef.current) {
+        bookingStatusCallbackRef.current(data);
       }
     });
 
     socket.on('notification:new', (notification) => {
-      if (onNewNotification) {
-        onNewNotification(notification);
+      if (notificationCallbackRef.current) {
+        notificationCallbackRef.current(notification);
       }
     });
 

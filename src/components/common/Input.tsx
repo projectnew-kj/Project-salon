@@ -1,5 +1,6 @@
-import React from 'react';
-import { View, TextInput, Text, StyleSheet, TextInputProps } from 'react-native';
+import React, { useState } from 'react';
+import { View, TextInput, Text, StyleSheet, TextInputProps, Pressable } from 'react-native';
+import { Eye, EyeOff } from 'lucide-react-native';
 import { useThemeStore } from '../../store/useThemeStore';
 
 interface InputProps extends TextInputProps {
@@ -7,25 +8,47 @@ interface InputProps extends TextInputProps {
   error?: string;
 }
 
-export const Input: React.FC<InputProps> = ({ label, error, style, ...props }) => {
+export const Input: React.FC<InputProps> = ({ label, error, style, secureTextEntry, ...props }) => {
   const { colors } = useThemeStore();
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const isPassword = Boolean(secureTextEntry);
 
   return (
     <View style={styles.container}>
       {label && <Text style={[styles.label, { color: colors.textSecondary }]}>{label}</Text>}
-      <TextInput
-        placeholderTextColor={colors.textMuted}
-        style={[
-          styles.input,
-          {
-            backgroundColor: colors.surface,
-            borderColor: error ? colors.danger : colors.border,
-            color: colors.text,
-          },
-          style,
-        ]}
-        {...props}
-      />
+      <View style={styles.inputWrapper}>
+        <TextInput
+          placeholderTextColor={colors.textMuted}
+          style={[
+            styles.input,
+            {
+              backgroundColor: colors.surface,
+              borderColor: error ? colors.danger : colors.border,
+              color: colors.text,
+              paddingRight: isPassword ? 52 : 14,
+            },
+            style,
+          ]}
+          secureTextEntry={isPassword ? !passwordVisible : secureTextEntry}
+          {...props}
+        />
+        {isPassword && (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={passwordVisible ? 'Hide password' : 'Show password'}
+            accessibilityHint={passwordVisible ? 'Hides the password text' : 'Shows the password text'}
+            hitSlop={8}
+            onPress={() => setPasswordVisible((visible) => !visible)}
+            style={({ pressed }) => [styles.passwordToggle, pressed && styles.passwordTogglePressed]}
+          >
+            {passwordVisible ? (
+              <EyeOff size={20} color={colors.textMuted} strokeWidth={2.2} />
+            ) : (
+              <Eye size={20} color={colors.textMuted} strokeWidth={2.2} />
+            )}
+          </Pressable>
+        )}
+      </View>
       {error && <Text style={[styles.error, { color: colors.danger }]}>{error}</Text>}
     </View>
   );
@@ -40,6 +63,9 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     marginBottom: 6,
   },
+  inputWrapper: {
+    position: 'relative',
+  },
   input: {
     height: 48,
     borderWidth: 1,
@@ -47,10 +73,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     fontSize: 15,
   },
+  passwordToggle: {
+    position: 'absolute',
+    right: 10,
+    top: 6,
+    width: 36,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 18,
+  },
+  passwordTogglePressed: {
+    opacity: 0.65,
+  },
   error: {
     fontSize: 12,
     marginTop: 4,
   },
 });
-
-export default Input;

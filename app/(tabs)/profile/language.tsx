@@ -33,6 +33,7 @@ export default function LanguageSelectionScreen() {
       </View>
 
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={LANGUAGES}
         keyExtractor={(item) => item.code}
         contentContainerStyle={styles.listContent}

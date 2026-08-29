@@ -1,4 +1,5 @@
 import React from 'react';
+import { Alert } from 'react-native';
 import { Tabs } from 'expo-router';
 import { Home, Compass, CalendarCheck, User, Languages } from 'lucide-react-native';
 import { useThemeStore } from '../../src/store/useThemeStore';
@@ -8,7 +9,11 @@ export default function TabsLayout() {
   const { colors } = useThemeStore();
 
   // Keep a live connection for booking status pushes and notifications while signed in
-  useUserSocket();
+  useUserSocket({
+    onNewNotification: (notification) => {
+      Alert.alert(notification.title || 'New Notification', notification.body || 'You have a new update.');
+    },
+  });
 
   return (
     <Tabs
@@ -54,19 +59,19 @@ export default function TabsLayout() {
 
   {/* If profile is in profile/index.tsx */}
       <Tabs.Screen
-    name="profile/index"
+    name="profile"
         options={{
           title: 'Profile',
           tabBarIcon: ({ color, size }) => <User size={size} color={color} />,
         }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
     name="profile/language"
         options={{
           title: 'Language',
           tabBarIcon: ({ color, size }) => <Languages size={size} color={color} />,
         }}
-      />
+      /> */}
     </Tabs>
   );
 }

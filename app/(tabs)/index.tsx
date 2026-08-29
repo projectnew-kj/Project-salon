@@ -81,6 +81,7 @@ export default function UserHomeScreen() {
     <ScrollView
       style={[styles.container, { backgroundColor: colors.background }]}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primaryAccent} />}
+      showsVerticalScrollIndicator={false}
     >
       {/* User Greeting Bar */}
       <View style={styles.topBar}>
@@ -110,6 +111,7 @@ export default function UserHomeScreen() {
       </View>
 
       <FlatList
+        showsVerticalScrollIndicator={false}
         horizontal
         showsHorizontalScrollIndicator={false}
         data={haircuts}

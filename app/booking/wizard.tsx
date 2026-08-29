@@ -41,6 +41,7 @@ export default function BookingWizardScreen() {
   const [slots, setSlots] = useState<Slot[]>([]);
   const [isOpen, setIsOpen] = useState(true);
   const [closureReason, setClosureReason] = useState('');
+  const [breaks, setBreaks] = useState<{ startTime: string; endTime: string; label?: string }[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
   const [notes, setNotes] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -55,6 +56,7 @@ export default function BookingWizardScreen() {
         const data = res.data.data;
         setIsOpen(data.isOpen);
         setClosureReason(data.reason || '');
+        setBreaks(data.breaks || []);
         setSlots(data.slots || []);
       } catch {
         setIsOpen(false);
@@ -116,7 +118,7 @@ export default function BookingWizardScreen() {
   };
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.background }]} contentContainerStyle={styles.content}>
+    <ScrollView style={[styles.container, { backgroundColor: colors.background }]} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
       {/* Top Bar Navigation */}
       <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
         <ChevronLeft size={24} color={colors.text} />
@@ -139,7 +141,7 @@ export default function BookingWizardScreen() {
 
       {/* 1. Date Selector */}
       <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>1. Select Date</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.dateList}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.dateList} showsVerticalScrollIndicator={false}>
         {availableDates.map((d) => {
           const isSelected = selectedDate === d.iso;
           return (
@@ -177,6 +179,7 @@ export default function BookingWizardScreen() {
         loading={loadingSlots}
         isOpen={isOpen}
         closureReason={closureReason}
+        breaks={breaks}
       />
 
       {/* 3. Special Instructions */}

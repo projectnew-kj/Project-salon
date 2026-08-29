@@ -54,6 +54,7 @@ export default function UserBookingsScreen() {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={bookings}
         keyExtractor={(item) => item._id}
         refreshControl={

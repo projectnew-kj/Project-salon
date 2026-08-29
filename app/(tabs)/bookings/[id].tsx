@@ -102,7 +102,7 @@ export default function BookingTrackerDetailScreen() {
   const isCancellable = booking.status === 'Pending' || booking.status === 'Confirmed';
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.background }]} contentContainerStyle={styles.content}>
+    <ScrollView style={[styles.container, { backgroundColor: colors.background }]} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
       <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
         <ChevronLeft size={24} color={colors.text} />
         <Text style={[styles.backText, { color: colors.text }]}>Back to Bookings</Text>
