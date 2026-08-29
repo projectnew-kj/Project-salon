@@ -9,11 +9,13 @@ const offerRoutes = require('./offerRoutes');
 const bookingRoutes = require('./bookingRoutes');
 const reviewRoutes = require('./reviewRoutes');
 const availabilityRoutes = require('./availabilityRoutes');
+const carouselRoutes = require('./carouselRoutes');
 const localizationController = require('../../controllers/localizationController');
 
 // Localization endpoints
 router.get('/languages', localizationController.getSupportedLanguages);
 router.get('/languages/:code/translations', localizationController.getTranslationsByCode);
+router.use('/carousels', carouselRoutes);
 
 // Mount Modular Routes
 router.use('/auth', authRoutes);

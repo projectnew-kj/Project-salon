@@ -16,6 +16,7 @@ const adminReviewController = require('../../controllers/admin/adminReviewContro
 const authValidation = require('../../validations/authValidation');
 const haircutValidation = require('../../validations/haircutValidation');
 const offerValidation = require('../../validations/offerValidation');
+const carouselValidation = require('../../validations/carouselValidation');
 const bookingValidation = require('../../validations/bookingValidation');
 const notificationService = require('../../services/notificationService');
 const ApiResponse = require('../../utils/apiResponse');
@@ -57,12 +58,12 @@ router.route('/offers/:id')
 
 // Carousel Banners CRUD
 router.route('/carousels')
-  .post(adminCarouselController.createCarousel)
+  .post(validate(carouselValidation.createCarouselSchema), adminCarouselController.createCarousel)
   .get(adminCarouselController.getAllCarousels);
 
 router.route('/carousels/:id')
-  .patch(adminCarouselController.updateCarousel)
-  .delete(adminCarouselController.deleteCarousel);
+  .patch(validate(carouselValidation.updateCarouselSchema), adminCarouselController.updateCarousel)
+  .delete(validate(carouselValidation.deleteCarouselSchema), adminCarouselController.deleteCarousel);
 
 // Bookings Management
 router.get('/bookings', adminBookingController.getAllBookings);

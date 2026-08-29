@@ -6,7 +6,8 @@ const httpStatusCodes = require('../../constants/httpStatusCodes');
 const socketEmitter = require('../../sockets/socketEmitter');
 
 const createCarousel = asyncHandler(async (req, res) => {
-  const banner = await Carousel.create(req.body);
+  const payload = { ...req.body, image: req.body.images?.[0] || '' };
+  const banner = await Carousel.create(payload);
   socketEmitter.emitCarouselUpdate('CREATED', banner);
 
   res.status(httpStatusCodes.CREATED).json(
@@ -22,7 +23,12 @@ const getAllCarousels = asyncHandler(async (req, res) => {
 });
 
 const updateCarousel = asyncHandler(async (req, res) => {
-  const banner = await Carousel.findByIdAndUpdate(req.params.id, req.body, {
+  const update = { ...req.body };
+  if (Array.isArray(req.body.images)) {
+    update.image = req.body.images[0] || '';
+  }
+
+  const banner = await Carousel.findByIdAndUpdate(req.params.id, update, {
     new: true,
     runValidators: true
   });
