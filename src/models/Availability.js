@@ -24,6 +24,28 @@ const timeSlotSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const breakSchema = new mongoose.Schema(
+  {
+    startTime: {
+      type: String,
+      required: true,
+      match: [/^([01]\d|2[0-3]):([0-5]\d)$/, 'Please provide a valid break start time (HH:mm)']
+    },
+    endTime: {
+      type: String,
+      required: true,
+      match: [/^([01]\d|2[0-3]):([0-5]\d)$/, 'Please provide a valid break end time (HH:mm)']
+    },
+    label: {
+      type: String,
+      default: 'Break',
+      trim: true,
+      maxlength: 80
+    }
+  },
+  { _id: false }
+);
+
 const dayScheduleSchema = new mongoose.Schema(
   {
     day: {
@@ -40,7 +62,11 @@ const dayScheduleSchema = new mongoose.Schema(
       enum: ['FULL_DAY', 'HALF_DAY', 'CUSTOM'],
       default: 'FULL_DAY'
     },
-    slots: [timeSlotSchema]
+    slots: [timeSlotSchema],
+    breaks: {
+      type: [breakSchema],
+      default: []
+    }
   },
   { _id: false }
 );
@@ -60,7 +86,11 @@ const specialDateSchema = new mongoose.Schema(
       type: String,
       default: ''
     },
-    customSlots: [timeSlotSchema]
+    customSlots: [timeSlotSchema],
+    breaks: {
+      type: [breakSchema],
+      default: []
+    }
   },
   { _id: false }
 );

@@ -57,6 +57,9 @@ class BookingEngineService {
     }).select('bookingTime durationMinutes status');
 
     const generatedSlots = [];
+    const activeBreaks = specialDate && specialDate.breaks?.length > 0
+      ? specialDate.breaks
+      : (daySchedule.breaks || []);
 
     for (const range of activeSlotsRanges) {
       const startMin = timeToMinutes(range.startTime);
@@ -67,6 +70,16 @@ class BookingEngineService {
       for (let curr = startMin; curr + interval <= endMin; curr += interval) {
         const timeSlotString = minutesToTime(curr);
         const slotEndString = minutesToTime(curr + interval);
+
+        const overlapsBreak = activeBreaks.some((breakItem) => {
+          const breakStart = timeToMinutes(breakItem.startTime);
+          const breakEnd = timeToMinutes(breakItem.endTime);
+          return curr < breakEnd && (curr + interval) > breakStart;
+        });
+
+        if (overlapsBreak) {
+          continue;
+        }
 
         // Count overlapping bookings
         const overlappingCount = existingBookings.filter((b) => {
@@ -92,6 +105,7 @@ class BookingEngineService {
       date: dateString,
       day: dayName,
       requireExactTimeSlot: availabilityConfig.requireExactTimeSlot,
+      breaks: activeBreaks,
       slots: generatedSlots
     };
   }
@@ -142,6 +156,35 @@ class BookingEngineService {
       const matchingSlot = availabilityData.slots.find((s) => s.time === bookingTime);
       if (!matchingSlot || !matchingSlot.isAvailable) {
         throw new ApiError(httpStatusCodes.CONFLICT, `Selected time slot (${bookingTime}) is already fully booked`);
+      }
+
+      const requestedStart = timeToMinutes(bookingTime);
+      const requestedEnd = requestedStart + durationMinutes;
+      const availabilityConfig = await Availability.findOne();
+      const specialDate = availabilityConfig?.specialDates?.find((sd) => sd.date === bookingDate);
+      const dayName = getDayName(bookingDate);
+      const daySchedule = availabilityConfig?.weeklySchedule?.find((ws) => ws.day === dayName);
+      const activeRanges = specialDate?.customSlots?.length ? specialDate.customSlots : (daySchedule?.slots || []);
+      const activeBreaks = specialDate?.breaks?.length ? specialDate.breaks : (daySchedule?.breaks || []);
+
+      const fitsWorkingRange = activeRanges.some((range) => {
+        const start = timeToMinutes(range.startTime);
+        const end = timeToMinutes(range.endTime);
+        return requestedStart >= start && requestedEnd <= end;
+      });
+
+      if (!fitsWorkingRange) {
+        throw new ApiError(httpStatusCodes.BAD_REQUEST, 'Selected time does not provide enough continuous working time for this service');
+      }
+
+      const overlapsBreak = activeBreaks.some((breakItem) => {
+        const breakStart = timeToMinutes(breakItem.startTime);
+        const breakEnd = timeToMinutes(breakItem.endTime);
+        return requestedStart < breakEnd && requestedEnd > breakStart;
+      });
+
+      if (overlapsBreak) {
+        throw new ApiError(httpStatusCodes.BAD_REQUEST, 'Selected appointment overlaps a salon break');
       }
     }
 
