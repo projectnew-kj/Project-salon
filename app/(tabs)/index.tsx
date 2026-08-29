@@ -20,21 +20,37 @@ export default function UserHomeScreen() {
 
   const loadHomeData = useCallback(async () => {
     try {
-      const [haircutsRes, offersRes] = await Promise.all([
+      const results = await Promise.allSettled([
         userApiClient.get('/haircuts'),
         userApiClient.get('/offers'),
+        userApiClient.get('/carousels'),
       ]);
 
-      setHaircuts(haircutsRes.data.data);
-      setOffers(offersRes.data.data);
+      const [haircutsResult, offersResult, carouselsResult] = results;
 
-      // Default visual banners fallback
-      setBanners([
-        { _id: '1', title: 'Summer Grooming Special', description: 'Up to 30% OFF on all styling packages' },
-        { _id: '2', title: 'Master Stylists Available', description: 'Book modern fade & beard sculpts' },
-      ]);
+      if (haircutsResult.status === 'fulfilled') {
+        setHaircuts(haircutsResult.value.data.data || []);
+      }
+
+      if (offersResult.status === 'fulfilled') {
+        setOffers(offersResult.value.data.data || []);
+      }
+
+      if (carouselsResult.status === 'fulfilled') {
+        setBanners((carouselsResult.value.data.data || []).map((banner: any) => ({
+          ...banner,
+          images: Array.isArray(banner.images)
+            ? banner.images
+            : banner.image
+              ? [banner.image]
+              : [],
+        })));
+      } else {
+        setBanners([]);
+      }
     } catch (err) {
       console.error('Failed to load homepage data', err);
+      setBanners([]);
     }
   }, []);
 

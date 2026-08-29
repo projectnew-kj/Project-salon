@@ -1,75 +1,105 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Dimensions, FlatList, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useThemeStore } from '../../store/useThemeStore';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const BANNER_WIDTH = SCREEN_WIDTH - 32;
 
-interface Banner {
+export interface Banner {
   _id: string;
   title: string;
   description?: string;
-  image: string;
+  images: string[];
   ctaAction?: string;
+  ctaTargetId?: string;
 }
 
-export const AnimatedBannerCarousel: React.FC<{ banners: Banner[] }> = ({ banners }) => {
+type CarouselSlide = {
+  id: string;
+  image: string;
+  title: string;
+  description?: string;
+  ctaAction?: string;
+  ctaTargetId?: string;
+};
+
+export const AnimatedBannerCarousel: React.FC<{ banners: Banner[]; onPressBanner?: (banner: Banner) => void }> = ({ banners, onPressBanner }) => {
   const { colors } = useThemeStore();
   const [activeIndex, setActiveIndex] = useState(0);
-  const flatListRef = useRef<FlatList>(null);
+  const flatListRef = useRef<FlatList<CarouselSlide>>(null);
+
+  const slides = useMemo<CarouselSlide[]>(() => {
+    return banners.flatMap((banner) =>
+      (banner.images || []).filter(Boolean).map((image, imageIndex) => ({
+        id: `${banner._id}-${imageIndex}`,
+        image,
+        title: banner.title,
+        description: banner.description,
+        ctaAction: banner.ctaAction,
+        ctaTargetId: banner.ctaTargetId,
+      }))
+    );
+  }, [banners]);
 
   useEffect(() => {
-    if (banners.length <= 1) return;
+    setActiveIndex(0);
+    flatListRef.current?.scrollToOffset({ offset: 0, animated: false });
+  }, [slides.length]);
+
+  useEffect(() => {
+    if (slides.length <= 1) return;
     const interval = setInterval(() => {
       setActiveIndex((prevIndex) => {
-        const nextIndex = prevIndex === banners.length - 1 ? 0 : prevIndex + 1;
+        const nextIndex = prevIndex === slides.length - 1 ? 0 : prevIndex + 1;
         flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
         return nextIndex;
       });
     }, 4500);
 
     return () => clearInterval(interval);
-  }, [banners.length]);
+  }, [slides.length]);
 
-  if (!banners || banners.length === 0) return null;
+  if (slides.length === 0) return null;
 
   return (
     <View style={styles.wrapper}>
       <FlatList
         ref={flatListRef}
-        data={banners}
+        data={slides}
         horizontal
         pagingEnabled
         showsHorizontalScrollIndicator={false}
-        keyExtractor={(item) => item._id}
+        keyExtractor={(item) => item.id}
+        getItemLayout={(_, index) => ({ length: BANNER_WIDTH + 32, offset: (BANNER_WIDTH + 32) * index, index })}
         onMomentumScrollEnd={(e) => {
-          const index = Math.round(e.nativeEvent.contentOffset.x / BANNER_WIDTH);
-          setActiveIndex(index);
+          const index = Math.round(e.nativeEvent.contentOffset.x / (BANNER_WIDTH + 32));
+          setActiveIndex(Math.max(0, Math.min(index, slides.length - 1)));
         }}
-        renderItem={({ item }) => (
-          <View style={[styles.bannerContainer, { backgroundColor: colors.surfaceSecondary }]}>
-            {item.image ? (
-              <Image source={{ uri: item.image }} style={styles.image} resizeMode="cover" />
-            ) : (
-              <View style={[styles.imageFallback, { backgroundColor: colors.primaryAccent }]}>
-                <Text style={styles.fallbackTitle}>{item.title}</Text>
-                {item.description ? <Text style={styles.fallbackSub}>{item.description}</Text> : null}
+        renderItem={({ item }) => {
+          const matchingBanner = banners.find((banner) => item.id.startsWith(`${banner._id}-`));
+          return (
+            <TouchableOpacity
+              activeOpacity={onPressBanner ? 0.9 : 1}
+              onPress={() => matchingBanner && onPressBanner?.(matchingBanner)}
+              style={styles.slideOuter}
+            >
+              <View style={[styles.bannerContainer, { backgroundColor: colors.surfaceSecondary }]}>
+                <Image source={{ uri: item.image }} style={styles.image} resizeMode="cover" />
+                <View style={styles.overlay}>
+                  <Text style={styles.bannerTitle} numberOfLines={1}>{item.title}</Text>
+                  {item.description ? <Text style={styles.bannerSub} numberOfLines={2}>{item.description}</Text> : null}
+                </View>
               </View>
-            )}
-            <View style={styles.overlay}>
-              <Text style={styles.bannerTitle}>{item.title}</Text>
-              {item.description ? <Text style={styles.bannerSub}>{item.description}</Text> : null}
-            </View>
-          </View>
-        )}
+            </TouchableOpacity>
+          );
+        }}
       />
 
-      {/* Indicator Dots */}
-      {banners.length > 1 && (
+      {slides.length > 1 && (
         <View style={styles.pagination}>
-          {banners.map((_, idx) => (
+          {slides.map((slide, idx) => (
             <View
-              key={idx}
+              key={slide.id}
               style={[
                 styles.dot,
                 {
@@ -87,6 +117,7 @@ export const AnimatedBannerCarousel: React.FC<{ banners: Banner[] }> = ({ banner
 
 const styles = StyleSheet.create({
   wrapper: { marginVertical: 12 },
+  slideOuter: { width: BANNER_WIDTH + 32 },
   bannerContainer: {
     width: BANNER_WIDTH,
     height: 160,
@@ -96,16 +127,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   image: { width: '100%', height: '100%' },
-  imageFallback: { flex: 1, padding: 20, justifyContent: 'center' },
-  fallbackTitle: { color: '#FFFFFF', fontSize: 20, fontWeight: '800' },
-  fallbackSub: { color: '#FFFFFF', fontSize: 13, marginTop: 4, opacity: 0.9 },
   overlay: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
     padding: 14,
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    backgroundColor: 'rgba(0,0,0,0.45)',
   },
   bannerTitle: { color: '#FFFFFF', fontSize: 16, fontWeight: '700' },
   bannerSub: { color: '#FFFFFF', fontSize: 12, opacity: 0.9, marginTop: 2 },

@@ -26,9 +26,15 @@ export interface Banner {
   _id: string;
   title: string;
   description?: string;
-  image: string;
+  images: string[];
+  /** Legacy API compatibility. New responses should use images. */
+  image?: string;
   ctaAction?: string;
   ctaTargetId?: string;
+  displayOrder?: number;
+  isActive?: boolean;
+  startDate?: string;
+  endDate?: string | null;
 }
 
 export type BookingStatus =
