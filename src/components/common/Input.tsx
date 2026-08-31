@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, TextInput, Text, StyleSheet, TextInputProps, Pressable } from 'react-native';
 import { Eye, EyeOff } from 'lucide-react-native';
 import { useThemeStore } from '../../store/useThemeStore';
+import { useLanguageStore } from '../../store/useLanguageStore';
 
 interface InputProps extends TextInputProps {
   label?: string;
@@ -10,12 +11,13 @@ interface InputProps extends TextInputProps {
 
 export const Input: React.FC<InputProps> = ({ label, error, style, secureTextEntry, ...props }) => {
   const { colors } = useThemeStore();
+  const translate = useLanguageStore((state) => state.t);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const isPassword = Boolean(secureTextEntry);
 
   return (
     <View style={styles.container}>
-      {label && <Text style={[styles.label, { color: colors.textSecondary }]}>{label}</Text>}
+      {label && <Text style={[styles.label, { color: colors.textSecondary }]}>{translate(label)}</Text>}
       <View style={styles.inputWrapper}>
         <TextInput
           placeholderTextColor={colors.textMuted}
@@ -31,12 +33,13 @@ export const Input: React.FC<InputProps> = ({ label, error, style, secureTextEnt
           ]}
           secureTextEntry={isPassword ? !passwordVisible : secureTextEntry}
           {...props}
+          placeholder={props.placeholder ? translate(props.placeholder) : props.placeholder}
         />
         {isPassword && (
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={passwordVisible ? 'Hide password' : 'Show password'}
-            accessibilityHint={passwordVisible ? 'Hides the password text' : 'Shows the password text'}
+            accessibilityLabel={translate(passwordVisible ? 'Hide password' : 'Show password')}
+            accessibilityHint={translate(passwordVisible ? 'Hides the password text' : 'Shows the password text')}
             hitSlop={8}
             onPress={() => setPasswordVisible((visible) => !visible)}
             style={({ pressed }) => [styles.passwordToggle, pressed && styles.passwordTogglePressed]}
@@ -49,7 +52,7 @@ export const Input: React.FC<InputProps> = ({ label, error, style, secureTextEnt
           </Pressable>
         )}
       </View>
-      {error && <Text style={[styles.error, { color: colors.danger }]}>{error}</Text>}
+      {error && <Text style={[styles.error, { color: colors.danger }]}>{translate(error)}</Text>}
     </View>
   );
 };

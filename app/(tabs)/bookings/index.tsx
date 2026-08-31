@@ -1,18 +1,18 @@
+import { useTranslation } from '../../../src/hooks/useTranslation';
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
 import { router } from 'expo-router';
 import { Calendar, Clock, ChevronRight, Scissors } from 'lucide-react-native';
 import { useThemeStore } from '../../../src/store/useThemeStore';
 import { useUserAuthStore } from '../../../src/store/useUserAuthStore';
-import { useLanguageStore } from '../../../src/store/useLanguageStore';
 import { StatusBadge } from '../../../src/components/common/StatusBadge';
 import { Button } from '../../../src/components/common/Button';
 import userApiClient from '../../../src/api/userApiClient';
 
 export default function UserBookingsScreen() {
+  const { t } = useTranslation();
   const { colors } = useThemeStore();
   const { isGuest, isAuthenticated } = useUserAuthStore();
-  const { t } = useLanguageStore();
 
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ export default function UserBookingsScreen() {
         <View style={[styles.iconCircle, { backgroundColor: colors.surfaceSecondary }]}>
           <Scissors size={36} color={colors.primaryAccent} />
         </View>
-        <Text style={[styles.emptyTitle, { color: colors.text }]}>Sign In to View Bookings</Text>
+        <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('booking.sign_in_view')}</Text>
         <Text style={[styles.emptySubtitle, { color: colors.textSecondary }]}>
           Track your live appointment status and access your service history.
         </Text>
@@ -68,12 +68,12 @@ export default function UserBookingsScreen() {
         ListEmptyComponent={
           !loading ? (
             <View style={styles.emptyState}>
-              <Text style={[styles.emptyTitle, { color: colors.text }]}>No Bookings Yet</Text>
+              <Text style={[styles.emptyTitle, { color: colors.text }]}>{t('booking.no_bookings')}</Text>
               <Text style={[styles.emptySubtitle, { color: colors.textSecondary }]}>
                 Your scheduled haircuts and styling sessions will appear here.
               </Text>
               <View style={styles.browseBtn}>
-                <Button title="Explore Services" onPress={() => router.push('/(tabs)')} />
+                <Button title={t('booking.explore_services')} onPress={() => router.push('/(tabs)')} />
               </View>
             </View>
           ) : null

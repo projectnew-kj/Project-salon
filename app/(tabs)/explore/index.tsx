@@ -1,3 +1,4 @@
+import { useTranslation } from '../../../src/hooks/useTranslation';
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, RefreshControl } from 'react-native';
 import { router } from 'expo-router';
@@ -11,6 +12,7 @@ import { Haircut, Offer } from '../../../src/types';
 type CatalogTab = 'haircuts' | 'offers';
 
 export default function ExploreScreen() {
+  const { t } = useTranslation();
   const { colors } = useThemeStore();
   const [activeTab, setActiveTab] = useState<CatalogTab>('haircuts');
   const [searchQuery, setSearchQuery] = useState('');
@@ -61,7 +63,7 @@ export default function ExploreScreen() {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.header}>
-        <Text style={[styles.headerTitle, { color: colors.text }]}>Explore</Text>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>{t('explore.title')}</Text>
         <View style={[styles.searchBox, { backgroundColor: colors.surface, borderColor: colors.border }]}>
           <Search size={18} color={colors.textMuted} />
           <TextInput
@@ -117,7 +119,7 @@ export default function ExploreScreen() {
             </View>
           )}
           ListEmptyComponent={
-            !loading ? <Text style={[styles.emptyText, { color: colors.textMuted }]}>No haircuts found</Text> : null
+            !loading ? <Text style={[styles.emptyText, { color: colors.textMuted }]}>{t('explore.no_haircuts')}</Text> : null
           }
         />
       ) : (
@@ -142,7 +144,7 @@ export default function ExploreScreen() {
             </View>
           )}
           ListEmptyComponent={
-            !loading ? <Text style={[styles.emptyText, { color: colors.textMuted }]}>No offers found</Text> : null
+            !loading ? <Text style={[styles.emptyText, { color: colors.textMuted }]}>{t('explore.no_offers')}</Text> : null
           }
         />
       )}

@@ -1,3 +1,4 @@
+import { useTranslation } from '../../hooks/useTranslation';
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useThemeStore } from '../../store/useThemeStore';
@@ -29,12 +30,13 @@ export const SlotPicker: React.FC<SlotPickerProps> = ({
   breaks = [],
 }) => {
   const { colors } = useThemeStore();
+  const { t } = useTranslation();
 
   if (loading) {
     return (
       <View style={styles.centerContainer}>
         <ActivityIndicator size="small" color={colors.primaryAccent} />
-        <Text style={[styles.loadingText, { color: colors.textSecondary }]}>Checking available times...</Text>
+        <Text style={[styles.loadingText, { color: colors.textSecondary }]}>{t('booking.checking_times')}</Text>
       </View>
     );
   }
@@ -42,7 +44,7 @@ export const SlotPicker: React.FC<SlotPickerProps> = ({
   if (!isOpen) {
     return (
       <View style={[styles.closureBox, { backgroundColor: colors.surfaceSecondary, borderColor: colors.border }]}>
-        <Text style={[styles.closureTitle, { color: colors.danger }]}>Unavailable</Text>
+        <Text style={[styles.closureTitle, { color: colors.danger }]}>{t('booking.unavailable')}</Text>
         <Text style={[styles.closureText, { color: colors.textSecondary }]}>
           {closureReason || 'Salon is closed on this date.'}
         </Text>
@@ -53,7 +55,7 @@ export const SlotPicker: React.FC<SlotPickerProps> = ({
   if (slots.length === 0) {
     return (
       <View style={[styles.closureBox, { backgroundColor: colors.surfaceSecondary, borderColor: colors.border }]}>
-        <Text style={[styles.closureText, { color: colors.textSecondary }]}>No slots available for this day.</Text>
+        <Text style={[styles.closureText, { color: colors.textSecondary }]}>{t('booking.no_slots')}</Text>
       </View>
     );
   }
@@ -62,7 +64,7 @@ export const SlotPicker: React.FC<SlotPickerProps> = ({
     <View>
       {breaks.length > 0 && (
         <View style={styles.breakInfo}>
-          <Text style={[styles.breakInfoTitle, { color: colors.text }]}>Breaks</Text>
+          <Text style={[styles.breakInfoTitle, { color: colors.text }]}>{t('booking.breaks')}</Text>
           {breaks.map((item, index) => (
             <Text key={`${item.startTime}-${item.endTime}-${index}`} style={[styles.breakInfoText, { color: colors.textSecondary }]}>
               {item.label || 'Break'}: {item.startTime} - {item.endTime}

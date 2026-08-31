@@ -1,6 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { useThemeStore } from '../../store/useThemeStore';
+import { useLanguageStore } from '../../store/useLanguageStore';
 
 interface ButtonProps {
   title: string;
@@ -18,6 +19,7 @@ export const Button: React.FC<ButtonProps> = ({
   disabled = false,
 }) => {
   const { colors } = useThemeStore();
+  const translate = useLanguageStore((state) => state.t);
 
   const getVariantStyles = () => {
     if (variant === 'danger') return { bg: colors.danger, text: '#FFFFFF', border: 'transparent' };
@@ -41,7 +43,7 @@ export const Button: React.FC<ButtonProps> = ({
       {loading ? (
         <ActivityIndicator color={vStyle.text} />
       ) : (
-        <Text style={[styles.text, { color: vStyle.text }]}>{title}</Text>
+        <Text style={[styles.text, { color: vStyle.text }]}>{translate(title)}</Text>
       )}
     </TouchableOpacity>
   );

@@ -1,3 +1,4 @@
+import { useTranslation } from '../../../src/hooks/useTranslation';
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { router } from 'expo-router';
@@ -15,12 +16,13 @@ const LANGUAGES = [
 ];
 
 export default function UserProfileScreen() {
+  const { t } = useTranslation();
   const { colors, mode, setThemeMode } = useThemeStore();
   const { user, isGuest, logout } = useUserAuthStore();
   const { currentLanguage, setLanguage } = useLanguageStore();
 
   const handleLogout = () => {
-    Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
+    Alert.alert(t('profile.sign_out'), t('profile.sign_out_confirm'), [
       { text: 'Cancel', style: 'cancel' },
       {
         text: 'Sign Out',
@@ -49,7 +51,7 @@ export default function UserProfileScreen() {
       </View>
 
       {/* Theme Selection Section */}
-      <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>Appearance</Text>
+      <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>{t('profile.appearance')}</Text>
       <View style={[styles.settingsCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
         {(['light', 'dark', 'system'] as const).map((tMode) => {
           const isSelected = mode === tMode;
@@ -74,7 +76,7 @@ export default function UserProfileScreen() {
       </View>
 
       {/* Multi-Language Selection Section */}
-      <Text style={[styles.sectionTitle, { color: colors.textSecondary, marginTop: 20 }]}>Language / மொழி</Text>
+      <Text style={[styles.sectionTitle, { color: colors.textSecondary, marginTop: 20 }]}>{t("Language / மொழி")}</Text>
       <View style={[styles.settingsCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
         {LANGUAGES.map((lang) => {
           const isSelected = currentLanguage === lang.code;
@@ -102,7 +104,7 @@ export default function UserProfileScreen() {
             onPress={() => router.push('/(auth)/login')}
           >
             <LogIn size={18} color="#FFFFFF" />
-            <Text style={styles.actionBtnText}>Sign In / Register</Text>
+            <Text style={styles.actionBtnText}>{t('profile.sign_in_register')}</Text>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
@@ -110,7 +112,7 @@ export default function UserProfileScreen() {
             onPress={handleLogout}
           >
             <LogOut size={18} color="#FFFFFF" />
-            <Text style={styles.actionBtnText}>Sign Out</Text>
+            <Text style={styles.actionBtnText}>{t('profile.sign_out')}</Text>
           </TouchableOpacity>
         )}
       </View>

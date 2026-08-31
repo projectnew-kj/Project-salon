@@ -1,3 +1,4 @@
+import { useTranslation } from '../../src/hooks/useTranslation';
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
@@ -10,6 +11,7 @@ import { Input } from '../../src/components/common/Input';
 import userApiClient from '../../src/api/userApiClient';
 
 export default function BookingWizardScreen() {
+  const { t } = useTranslation();
   const { itemId, itemType, title, price, duration } = useLocalSearchParams<{
     itemId: string;
     itemType: 'HAIRCUT' | 'OFFER_PACKAGE';
@@ -83,7 +85,7 @@ export default function BookingWizardScreen() {
     }
 
     if (!selectedSlot) {
-      Alert.alert('Selection Missing', 'Please select an appointment time slot.');
+      Alert.alert(t('booking.selection_missing'), t('booking.select_slot'))
       return;
     }
 
@@ -111,7 +113,7 @@ export default function BookingWizardScreen() {
         ]
       );
     } catch (err: any) {
-      Alert.alert('Booking Error', err.response?.data?.message || 'Failed to place booking.');
+      Alert.alert(t('booking.booking_error'), err.response?.data?.message || t('booking.failed_place'));
     } finally {
       setSubmitting(false);
     }
@@ -122,7 +124,7 @@ export default function BookingWizardScreen() {
       {/* Top Bar Navigation */}
       <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
         <ChevronLeft size={24} color={colors.text} />
-        <Text style={[styles.backText, { color: colors.text }]}>Back</Text>
+        <Text style={[styles.backText, { color: colors.text }]}>{t('booking.back')}</Text>
       </TouchableOpacity>
 
       {/* Service Summary Overview */}
@@ -140,7 +142,7 @@ export default function BookingWizardScreen() {
       </View>
 
       {/* 1. Date Selector */}
-      <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>1. Select Date</Text>
+      <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>{t('booking.select_date')}</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.dateList} showsVerticalScrollIndicator={false}>
         {availableDates.map((d) => {
           const isSelected = selectedDate === d.iso;

@@ -1,17 +1,17 @@
+import { useTranslation } from '../../src/hooks/useTranslation';
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, RefreshControl, TouchableOpacity, FlatList } from 'react-native';
 import { router } from 'expo-router';
 import { Scissors, Gift, Clock, Star, ArrowRight } from 'lucide-react-native';
 import { useThemeStore } from '../../src/store/useThemeStore';
 import { useUserAuthStore } from '../../src/store/useUserAuthStore';
-import { useLanguageStore } from '../../src/store/useLanguageStore';
 import { AnimatedBannerCarousel } from '../../src/components/home/AnimatedBannerCarousel';
 import userApiClient from '../../src/api/userApiClient';
 
 export default function UserHomeScreen() {
+  const { t } = useTranslation();
   const { colors } = useThemeStore();
   const { user, isGuest } = useUserAuthStore();
-  const { t } = useLanguageStore();
 
   const [banners, setBanners] = useState<any[]>([]);
   const [haircuts, setHaircuts] = useState<any[]>([]);
@@ -97,7 +97,7 @@ export default function UserHomeScreen() {
             style={[styles.signInPill, { backgroundColor: colors.primaryAccent }]}
             onPress={() => router.push('/(auth)/login')}
           >
-            <Text style={styles.signInPillText}>Sign In</Text>
+            <Text style={styles.signInPillText}>{t("Sign In")}</Text>
           </TouchableOpacity>
         )}
       </View>

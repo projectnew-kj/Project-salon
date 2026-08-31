@@ -1,11 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { useLanguageStore } from '../../store/useLanguageStore';
 
 interface StatusBadgeProps {
   status: 'Pending' | 'Confirmed' | 'In Progress' | 'Completed' | 'Cancelled' | 'Rejected' | string;
 }
 
 export const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
+  const translate = useLanguageStore((state) => state.t);
+
   const getBadgeStyle = () => {
     switch (status) {
       case 'Pending':
@@ -28,7 +31,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
 
   return (
     <View style={[styles.badge, { backgroundColor: current.bg, borderColor: current.border }]}>
-      <Text style={[styles.text, { color: current.text }]}>{status}</Text>
+      <Text style={[styles.text, { color: current.text }]}>{translate(`status.${status === 'In Progress' ? 'in_progress' : status.toLowerCase()}`, status)}</Text>
     </View>
   );
 };

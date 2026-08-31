@@ -1,3 +1,4 @@
+import { useTranslation } from '../../../src/hooks/useTranslation';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert, ActivityIndicator, TouchableOpacity, Modal } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
@@ -10,6 +11,7 @@ import { Input } from '../../../src/components/common/Input';
 import userApiClient from '../../../src/api/userApiClient';
 
 export default function BookingTrackerDetailScreen() {
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors } = useThemeStore();
 
@@ -28,7 +30,7 @@ export default function BookingTrackerDetailScreen() {
       const res = await userApiClient.get(`/users/bookings/${id}`);
       setBooking(res.data.data);
     } catch {
-      Alert.alert('Error', 'Unable to fetch appointment details');
+      Alert.alert(t('common.error'), t('booking.appointment_fetch_error', 'Unable to fetch appointment details'));
     } finally {
       setLoading(false);
     }
@@ -49,7 +51,7 @@ export default function BookingTrackerDetailScreen() {
   });
 
   const handleCancelBooking = () => {
-    Alert.alert('Cancel Appointment', 'Are you sure you want to cancel this booking?', [
+    Alert.alert(t('booking.cancel_appointment'), t('booking.cancel_confirm'), [
       { text: 'Keep Booking', style: 'cancel' },
       {
         text: 'Cancel Appointment',
@@ -61,9 +63,9 @@ export default function BookingTrackerDetailScreen() {
               reason: 'Customer initiated cancellation',
             });
             await fetchDetails();
-            Alert.alert('Cancelled', 'Your appointment has been cancelled.');
+            Alert.alert(t('booking.cancelled'), t('booking.cancelled_message'));
           } catch (err: any) {
-            Alert.alert('Error', err.response?.data?.message || 'Unable to cancel');
+            Alert.alert(t('common.error'), err.response?.data?.message || t('booking.cancel_error', 'Unable to cancel'));
           } finally {
             setCancelling(false);
           }
@@ -82,9 +84,9 @@ export default function BookingTrackerDetailScreen() {
       });
       setReviewModalVisible(false);
       setBooking((prev: any) => ({ ...prev, isReviewed: true }));
-      Alert.alert('Thank you!', 'Your review has been submitted successfully.');
+      Alert.alert(t('booking.review_thanks'), t('booking.review_success'));
     } catch (err: any) {
-      Alert.alert('Review Error', err.response?.data?.message || 'Failed to submit review');
+      Alert.alert(t('booking.review_error'), err.response?.data?.message || t('booking.failed_review'));
     } finally {
       setSubmittingReview(false);
     }
@@ -105,7 +107,7 @@ export default function BookingTrackerDetailScreen() {
     <ScrollView style={[styles.container, { backgroundColor: colors.background }]} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
       <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
         <ChevronLeft size={24} color={colors.text} />
-        <Text style={[styles.backText, { color: colors.text }]}>Back to Bookings</Text>
+        <Text style={[styles.backText, { color: colors.text }]}>{t('booking.back_to_bookings', 'Back to Bookings')}</Text>
       </TouchableOpacity>
 
       {/* Main Status Header Card */}
@@ -150,7 +152,7 @@ export default function BookingTrackerDetailScreen() {
 
       {/* Service Details Card */}
       <View style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border, marginTop: 16 }]}>
-        <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>Service Details</Text>
+        <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>{t('booking.service_details')}</Text>
         <View style={styles.infoRow}>
           <Scissors size={18} color={colors.primaryAccent} />
           <Text style={[styles.infoText, { color: colors.text }]}>
@@ -168,7 +170,7 @@ export default function BookingTrackerDetailScreen() {
           </Text>
         </View>
         <View style={styles.priceRow}>
-          <Text style={[styles.priceLabel, { color: colors.textSecondary }]}>Total Amount</Text>
+          <Text style={[styles.priceLabel, { color: colors.textSecondary }]}>{t('booking.total_amount')}</Text>
           <Text style={[styles.totalAmount, { color: colors.primaryAccent }]}>₹{booking.totalAmount}</Text>
         </View>
       </View>
@@ -196,7 +198,7 @@ export default function BookingTrackerDetailScreen() {
       <Modal visible={reviewModalVisible} transparent animationType="slide">
         <View style={styles.modalBackdrop}>
           <View style={[styles.modalCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-            <Text style={[styles.modalTitle, { color: colors.text }]}>Rate Your Experience</Text>
+            <Text style={[styles.modalTitle, { color: colors.text }]}>{t('booking.rate_experience')}</Text>
             <Text style={[styles.modalSub, { color: colors.textSecondary }]}>
               How was your service with {booking.haircut?.name || 'us'}?
             </Text>

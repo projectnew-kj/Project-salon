@@ -1,3 +1,4 @@
+import { useTranslation } from '../../src/hooks/useTranslation';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
@@ -9,6 +10,7 @@ import { useUserAuthStore } from '../../src/store/useUserAuthStore';
 import userApiClient from '../../src/api/userApiClient';
 
 export default function LoginScreen() {
+  const { t } = useTranslation();
   const { colors } = useThemeStore();
   const { setAuth, setGuest } = useUserAuthStore();
 
@@ -18,7 +20,7 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
-      Alert.alert('Validation Error', 'Please enter email and password');
+      Alert.alert(t('validation.error'), t('validation.enter_email_password'));
       return;
     }
 
@@ -33,7 +35,7 @@ export default function LoginScreen() {
       await setAuth(user, tokens.accessToken, tokens.refreshToken);
       router.replace('/(tabs)');
     } catch (err: any) {
-      Alert.alert('Login Failed', err.response?.data?.message || 'Invalid email or password');
+      Alert.alert(t('auth.login_failed'), err.response?.data?.message || t('auth.invalid_credentials'));
     } finally {
       setLoading(false);
     }
@@ -54,9 +56,9 @@ export default function LoginScreen() {
           <View style={[styles.iconCircle, { backgroundColor: colors.surfaceSecondary }]}>
             <Scissors size={40} color={colors.primaryAccent} />
           </View>
-          <Text style={[styles.title, { color: colors.text }]}>Welcome Back</Text>
+          <Text style={[styles.title, { color: colors.text }]}>{t('auth.welcome_back')}</Text>
           <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-            Sign in to manage your appointments
+            {t('auth.sign_in_manage')}
           </Text>
         </View>
 
@@ -81,7 +83,7 @@ export default function LoginScreen() {
 
           <View style={styles.dividerRow}>
             <View style={[styles.line, { backgroundColor: colors.border }]} />
-            <Text style={[styles.orText, { color: colors.textMuted }]}>OR</Text>
+            <Text style={[styles.orText, { color: colors.textMuted }]}>{t('common.or')}</Text>
             <View style={[styles.line, { backgroundColor: colors.border }]} />
           </View>
 
@@ -97,7 +99,7 @@ export default function LoginScreen() {
             style={styles.switchRow}
           >
             <Text style={[styles.switchText, { color: colors.textSecondary }]}>
-              Don't have an account? <Text style={{ color: colors.primaryAccent, fontWeight: '700' }}>Register</Text>
+              {t('auth.no_account')} <Text style={{ color: colors.primaryAccent, fontWeight: '700' }}>{t('auth.register')}</Text>
             </Text>
           </TouchableOpacity>
         </View>

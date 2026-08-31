@@ -1,3 +1,4 @@
+import { useTranslation } from '../../src/hooks/useTranslation';
 import React from 'react';
 import { Alert } from 'react-native';
 import { Tabs } from 'expo-router';
@@ -6,12 +7,13 @@ import { useThemeStore } from '../../src/store/useThemeStore';
 import { useUserSocket } from '../../src/hooks/useUserSocket';
 
 export default function TabsLayout() {
+  const { t } = useTranslation();
   const { colors } = useThemeStore();
 
   // Keep a live connection for booking status pushes and notifications while signed in
   useUserSocket({
     onNewNotification: (notification) => {
-      Alert.alert(notification.title || 'New Notification', notification.body || 'You have a new update.');
+      Alert.alert(notification.title || t('notification.new'), notification.body || t('notification.update'));
     },
   });
 
@@ -34,7 +36,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: t('home.home'),
           tabBarIcon: ({ color, size }) => <Home size={size} color={color} />,
         }}
       />
@@ -43,7 +45,7 @@ export default function TabsLayout() {
       <Tabs.Screen
     name="explore/index"
         options={{
-          title: 'Explore',
+          title: t('home.explore'),
           tabBarIcon: ({ color, size }) => <Compass size={size} color={color} />,
         }}
       />
@@ -52,7 +54,7 @@ export default function TabsLayout() {
       <Tabs.Screen
     name="bookings"
         options={{
-          title: 'Bookings',
+          title: t('home.bookings'),
           tabBarIcon: ({ color, size }) => <CalendarCheck size={size} color={color} />,
         }}
       />
@@ -61,14 +63,14 @@ export default function TabsLayout() {
       <Tabs.Screen
     name="profile"
         options={{
-          title: 'Profile',
+          title: t('home.profile'),
           tabBarIcon: ({ color, size }) => <User size={size} color={color} />,
         }}
       />
       {/* <Tabs.Screen
     name="profile/language"
         options={{
-          title: 'Language',
+          title: t('home.language'),
           tabBarIcon: ({ color, size }) => <Languages size={size} color={color} />,
         }}
       /> */}

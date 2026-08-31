@@ -1,3 +1,4 @@
+import { useTranslation } from '../../src/hooks/useTranslation';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
@@ -9,6 +10,7 @@ import { useUserAuthStore } from '../../src/store/useUserAuthStore';
 import userApiClient from '../../src/api/userApiClient';
 
 export default function RegisterScreen() {
+  const { t } = useTranslation();
   const { colors } = useThemeStore();
   const { setAuth } = useUserAuthStore();
 
@@ -20,7 +22,7 @@ export default function RegisterScreen() {
 
   const handleRegister = async () => {
     if (!name.trim() || !email.trim() || !password.trim()) {
-      Alert.alert('Validation Error', 'Name, email, and password are required');
+      Alert.alert(t('validation.error'), t('validation.name_email_password_required'));
       return;
     }
 
@@ -38,7 +40,7 @@ export default function RegisterScreen() {
       router.replace('/(tabs)');
     } catch (err: any) {
       console.log(err, "err")
-      Alert.alert('Registration Failed', err.response?.data?.message || 'Unable to register account');
+      Alert.alert(t('auth.registration_failed'), err.response?.data?.message || t('auth.unable_register'));
     } finally {
       setLoading(false);
     }
@@ -54,9 +56,9 @@ export default function RegisterScreen() {
           <View style={[styles.iconCircle, { backgroundColor: colors.surfaceSecondary }]}>
             <Scissors size={40} color={colors.primaryAccent} />
           </View>
-          <Text style={[styles.title, { color: colors.text }]}>Create Account</Text>
+          <Text style={[styles.title, { color: colors.text }]}>{t('auth.create_account')}</Text>
           <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-            Book appointments and access exclusive offers
+            {t('auth.register_subtitle')}
           </Text>
         </View>
 
@@ -93,7 +95,7 @@ export default function RegisterScreen() {
             style={styles.switchRow}
           >
             <Text style={[styles.switchText, { color: colors.textSecondary }]}>
-              Already have an account? <Text style={{ color: colors.primaryAccent, fontWeight: '700' }}>Sign In</Text>
+              {t('auth.have_account')} <Text style={{ color: colors.primaryAccent, fontWeight: '700' }}>{t('auth.sign_in')}</Text>
             </Text>
           </TouchableOpacity>
         </View>

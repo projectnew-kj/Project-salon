@@ -47,7 +47,7 @@ export const HaircutCard: React.FC<HaircutCardProps> = ({
 };
 
 const styles = StyleSheet.create({
-  card: { width: 170, padding: 14, borderRadius: 16, borderWidth: 1 },
+  card: { width: "100%", padding: 14, borderRadius: 16, borderWidth: 1 },
   iconBadge: { width: 44, height: 44, borderRadius: 12, alignItems: 'center', justifyContent: 'center', marginBottom: 10 },
   name: { fontSize: 15, fontWeight: '700' },
   desc: { fontSize: 12, marginTop: 4, lineHeight: 16 },
