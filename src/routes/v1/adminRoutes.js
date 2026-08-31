@@ -12,6 +12,7 @@ const adminCarouselController = require('../../controllers/admin/adminCarouselCo
 const adminBookingController = require('../../controllers/admin/adminBookingController');
 const adminUserController = require('../../controllers/admin/adminUserController');
 const availabilityController = require('../../controllers/admin/availabilityController');
+const adminLanguageController = require('../../controllers/admin/adminLanguageController');
 const adminReviewController = require('../../controllers/admin/adminReviewController');
 const authValidation = require('../../validations/authValidation');
 const haircutValidation = require('../../validations/haircutValidation');
@@ -85,6 +86,14 @@ router.get('/reviews/stats', adminReviewController.getReviewStats);
 router.get('/reviews/:id', adminReviewController.getReviewById);
 router.patch('/reviews/:id/toggle-visibility', adminReviewController.toggleReviewVisibility);
 router.delete('/reviews/:id', adminReviewController.deleteReview);
+
+// Language / Translation Management
+router.get('/languages', adminLanguageController.getAllLanguages);
+router.post('/languages', adminLanguageController.createLanguage);
+router.patch('/languages/:id', adminLanguageController.updateLanguage);
+router.delete('/languages/:id', adminLanguageController.deleteLanguage);
+router.put('/languages/:id/translations/:key', adminLanguageController.upsertTranslation);
+router.delete('/languages/:id/translations/:key', adminLanguageController.deleteTranslation);
 
 // Availability & Schedule Management
 router.get('/availability', availabilityController.getAvailabilityConfig);

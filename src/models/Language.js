@@ -28,9 +28,11 @@ const languageSchema = new mongoose.Schema(
       type: Boolean,
       default: true
     },
+    // Use a plain object instead of Mongoose Map.
+    // Translation keys can legitimately contain periods, e.g.
+    // "Add at least one image URL." and "home.book_now".
     translations: {
-      type: Map,
-      of: String,
+      type: mongoose.Schema.Types.Mixed,
       default: {}
     }
   },

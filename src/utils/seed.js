@@ -16,6 +16,7 @@ const Notification = require('../models/Notification');
 const RefreshToken = require('../models/RefreshToken');
 const bookingStatus = require('../constants/bookingStatus');
 const roles = require('../constants/roles');
+const defaultTranslations = require('./defaultTranslations');
 
 const IMAGE = {
   salon: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1200&q=80',
@@ -260,15 +261,18 @@ async function upsertCarousels(offers, haircuts) {
 
 async function seedLanguages() {
   const languages = [
-    { code: 'en', name: 'English', nativeName: 'English', isDefault: true, isActive: true, translations: { home: 'Home', bookings: 'Bookings', offers: 'Offers', profile: 'Profile' } },
-    { code: 'ta', name: 'Tamil', nativeName: 'தமிழ்', isDefault: false, isActive: true, translations: { home: 'முகப்பு', bookings: 'முன்பதிவுகள்', offers: 'சலுகைகள்', profile: 'சுயவிவரம்' } },
-    { code: 'ml', name: 'Malayalam', nativeName: 'മലയാളം', isDefault: false, isActive: true, translations: { home: 'ഹോം', bookings: 'ബുക്കിംഗുകൾ', offers: 'ഓഫറുകൾ', profile: 'പ്രൊഫൈൽ' } },
-    { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', isDefault: false, isActive: true, translations: { home: 'होम', bookings: 'बुकिंग', offers: 'ऑफर', profile: 'प्रोफ़ाइल' } },
-    { code: 'kn', name: 'Kannada', nativeName: 'ಕನ್ನಡ', isDefault: false, isActive: true, translations: { home: 'ಮುಖಪುಟ', bookings: 'ಬುಕಿಂಗ್‌ಗಳು', offers: 'ಆಫರ್‌ಗಳು', profile: 'ಪ್ರೊಫೈಲ್' } }
+    { code: 'en', name: 'English', nativeName: 'English', isDefault: true },
+    { code: 'ta', name: 'Tamil', nativeName: 'தமிழ்', isDefault: false },
+    { code: 'ml', name: 'Malayalam', nativeName: 'മലയാളം', isDefault: false },
+    { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', isDefault: false },
+    { code: 'kn', name: 'Kannada', nativeName: 'ಕನ್ನಡ', isDefault: false }
   ];
-
   for (const data of languages) {
-    await Language.updateOne({ code: data.code }, { $set: data }, { upsert: true });
+    await Language.updateOne(
+      { code: data.code },
+      { $set: { ...data, isActive: true, translations: defaultTranslations[data.code] || {} } },
+      { upsert: true }
+    );
   }
 }
 

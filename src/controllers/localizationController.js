@@ -18,10 +18,13 @@ const getTranslationsByCode = asyncHandler(async (req, res) => {
     language = await Language.findOne({ isDefault: true });
   }
 
+  const translations = language?.translations instanceof Map
+    ? Object.fromEntries(language.translations)
+    : (language?.translations || {});
   res.status(httpStatusCodes.OK).json(
     new ApiResponse(httpStatusCodes.OK, `Translations for ${language ? language.code : 'en'}`, {
       code: language?.code || 'en',
-      translations: language?.translations || {}
+      translations
     })
   );
 });
