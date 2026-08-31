@@ -7,6 +7,7 @@ import { useThemeStore } from '../../../src/store/useThemeStore';
 import apiClient from '../../../src/api/apiClient';
 
 export default function HaircutModalScreen() {
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors } = useThemeStore();
   const isEditing = !!id;
@@ -31,7 +32,7 @@ export default function HaircutModalScreen() {
 
   const handleSave = async () => {
     if (!name.trim() || !price.trim()) {
-      Alert.alert('Validation Error', 'Name and price are required');
+      Alert.alert(t('Validation Error'), t('Name and price are required'));
       return;
     }
 
@@ -52,7 +53,7 @@ export default function HaircutModalScreen() {
 
       router.back();
     } catch (err: any) {
-      Alert.alert('Error', err.response?.data?.message || 'Failed to save haircut');
+      Alert.alert(t('Error'), err.response?.data?.message || t('Failed to save haircut'));
     } finally {
       setLoading(false);
     }

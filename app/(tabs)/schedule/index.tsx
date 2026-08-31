@@ -1,3 +1,4 @@
+import { useTranslation } from '../../../src/hooks/useTranslation';
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -44,6 +45,7 @@ const formatTime = (date: Date) => {
 };
 
 export default function AdminScheduleScreen() {
+  const { t } = useTranslation();
   const { colors } = useThemeStore();
   const [config, setConfig] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -72,7 +74,7 @@ export default function AdminScheduleScreen() {
       });
       setConfig(data);
     } catch {
-      Alert.alert('Error', 'Failed to load schedule config');
+      Alert.alert(t('Error'), t('Failed to load schedule config'));
     } finally {
       setLoading(false);
     }
@@ -171,7 +173,7 @@ export default function AdminScheduleScreen() {
       if (!day.isOpen) continue;
       const slot = day.slots[0];
       if (!TIME_RE.test(slot.startTime) || !TIME_RE.test(slot.endTime)) {
-        Alert.alert('Invalid time', `${day.day}: use HH:mm format, for example 09:00.`);
+        Alert.alert(t('Invalid time'), `${day.day}: ${t('use HH:mm format, for example 09:00.')}`);
         return;
       }
       const [openH, openM] = slot.startTime.split(':').map(Number);
@@ -179,13 +181,13 @@ export default function AdminScheduleScreen() {
       const open = openH * 60 + openM;
       const close = closeH * 60 + closeM;
       if (open >= close) {
-        Alert.alert('Invalid operating hours', `${day.day}: closing time must be later than opening time.`);
+        Alert.alert(t('Invalid operating hours'), `${day.day}: ${t('closing time must be later than opening time.')}`);
         return;
       }
       for (let i = 0; i < (day.breaks || []).length; i += 1) {
         const item = day.breaks![i];
         if (!TIME_RE.test(item.startTime) || !TIME_RE.test(item.endTime)) {
-          Alert.alert('Invalid break', `${day.day}: break ${i + 1} must use HH:mm format.`);
+          Alert.alert(t('Invalid break'), `${day.day}: ${t('break must use HH:mm format.')}`);
           return;
         }
         const [bsh, bsm] = item.startTime.split(':').map(Number);
@@ -193,7 +195,7 @@ export default function AdminScheduleScreen() {
         const bs = bsh * 60 + bsm;
         const be = beh * 60 + bem;
         if (bs >= be || bs < open || be > close) {
-          Alert.alert('Invalid break', `${day.day}: breaks must be inside operating hours and end after they start.`);
+          Alert.alert(t('Invalid break'), `${day.day}: ${t('breaks must be inside operating hours and end after they start.')}`);
           return;
         }
       }
@@ -202,10 +204,10 @@ export default function AdminScheduleScreen() {
     setSaving(true);
     try {
       await apiClient.put('/admin/availability', config);
-      Alert.alert('Success', 'Operating hours and breaks updated. Users have been notified.');
+      Alert.alert(t('Success'), t('Operating hours and breaks updated. Users have been notified.'));
       await fetchSchedule();
     } catch (err: any) {
-      Alert.alert('Error', err.response?.data?.message || 'Failed to save changes');
+      Alert.alert(t('Error'), err.response?.data?.message || t('Failed to save changes'));
     } finally {
       setSaving(false);
     }
@@ -241,7 +243,7 @@ export default function AdminScheduleScreen() {
           <View style={[styles.pickerCard, { backgroundColor: colors.surface }]}>
             <View style={styles.pickerHeader}>
               <View style={{ flex: 1 }}>
-                <Text style={[styles.pickerEyebrow, { color: colors.textMuted }]}>SCHEDULE</Text>
+                <Text style={[styles.pickerEyebrow, { color: colors.textMuted }]}>{t("SCHEDULE")}</Text>
                 <Text style={[styles.pickerTitle, { color: colors.text }]}>{pickerTitle}</Text>
               </View>
               <TouchableOpacity onPress={() => setTimePicker(null)} style={[styles.pickerClose, { backgroundColor: colors.surfaceSecondary }]}>
@@ -264,7 +266,7 @@ export default function AdminScheduleScreen() {
                   style={[styles.pickerCancelButton, { borderColor: colors.border }]}
                   onPress={() => setTimePicker(null)}
                 >
-                  <Text style={[styles.pickerCancelText, { color: colors.textSecondary }]}>Cancel</Text>
+                  <Text style={[styles.pickerCancelText, { color: colors.textSecondary }]}>{t("Cancel")}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.pickerDoneButton, { backgroundColor: colors.primaryAccent }]}
@@ -273,7 +275,7 @@ export default function AdminScheduleScreen() {
                     setTimePicker(null);
                   }}
                 >
-                  <Text style={styles.pickerDoneText}>Done</Text>
+                  <Text style={styles.pickerDoneText}>{t("Done")}</Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -285,8 +287,8 @@ export default function AdminScheduleScreen() {
       <View style={[styles.masterCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
         <View style={styles.switchRow}>
           <View style={{ flex: 1, paddingRight: 12 }}>
-            <Text style={[styles.masterTitle, { color: colors.text }]}>Accept Online Bookings</Text>
-            <Text style={[styles.masterSub, { color: colors.textSecondary }]}>Global business availability switch</Text>
+            <Text style={[styles.masterTitle, { color: colors.text }]}>{t("Accept Online Bookings")}</Text>
+            <Text style={[styles.masterSub, { color: colors.textSecondary }]}>{t("Global business availability switch")}</Text>
           </View>
           <Switch
             value={config.isBusinessOpen}
@@ -296,8 +298,8 @@ export default function AdminScheduleScreen() {
         </View>
       </View>
 
-      <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>Weekly Operating Hours</Text>
-      <Text style={[styles.helperText, { color: colors.textMuted }]}>Edit opening and closing times, then add one or more breaks such as lunch breaks.</Text>
+      <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>{t("Weekly Operating Hours")}</Text>
+      <Text style={[styles.helperText, { color: colors.textMuted }]}>{t("Edit opening and closing times, then add one or more breaks such as lunch breaks.")}</Text>
 
       {config.weeklySchedule.map((dayItem: DaySchedule, index: number) => {
         const slot = dayItem.slots[0];
@@ -316,7 +318,7 @@ export default function AdminScheduleScreen() {
               <>
                 <View style={styles.timeRow}>
                   <View style={styles.timeField}>
-                    <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Opens</Text>
+                    <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>{t("Opens")}</Text>
                     <View style={[styles.inputWrap, { borderColor: colors.border, backgroundColor: colors.background }]}>
                       <Clock size={15} color={colors.primaryAccent} />
                       <TouchableOpacity
@@ -329,9 +331,9 @@ export default function AdminScheduleScreen() {
                       </TouchableOpacity>
                     </View>
                   </View>
-                  <Text style={[styles.toText, { color: colors.textMuted }]}>to</Text>
+                  <Text style={[styles.toText, { color: colors.textMuted }]}>{t("to")}</Text>
                   <View style={styles.timeField}>
-                    <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Closes</Text>
+                    <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>{t("Closes")}</Text>
                     <View style={[styles.inputWrap, { borderColor: colors.border, backgroundColor: colors.background }]}>
                       <Clock size={15} color={colors.primaryAccent} />
                       <TouchableOpacity
@@ -358,7 +360,7 @@ export default function AdminScheduleScreen() {
                       </TouchableOpacity>
                     </View>
                     <View style={styles.labelField}>
-                      <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Label</Text>
+                      <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>{t("Label")}</Text>
                       <TextInput
                         value={breakItem.label}
                         onChangeText={(value) => updateBreak(index, breakIndex, 'label', value)}
@@ -369,7 +371,7 @@ export default function AdminScheduleScreen() {
                     </View>
                     <View style={styles.timeRow}>
                       <View style={styles.timeField}>
-                        <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>Start</Text>
+                        <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>{t("Start")}</Text>
                         <TouchableOpacity
                           style={[styles.textInput, styles.timePickerField, { borderColor: colors.border, backgroundColor: colors.background }]}
                           onPress={() => openTimePicker(index, 'breakStart', breakItem.startTime, breakIndex)}
@@ -379,9 +381,9 @@ export default function AdminScheduleScreen() {
                           <ChevronDown size={15} color={colors.textMuted} />
                         </TouchableOpacity>
                       </View>
-                      <Text style={[styles.toText, { color: colors.textMuted }]}>to</Text>
+                      <Text style={[styles.toText, { color: colors.textMuted }]}>{t("to")}</Text>
                       <View style={styles.timeField}>
-                        <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>End</Text>
+                        <Text style={[styles.fieldLabel, { color: colors.textSecondary }]}>{t("End")}</Text>
                         <TouchableOpacity
                           style={[styles.textInput, styles.timePickerField, { borderColor: colors.border, backgroundColor: colors.background }]}
                           onPress={() => openTimePicker(index, 'breakEnd', breakItem.endTime, breakIndex)}
@@ -401,11 +403,11 @@ export default function AdminScheduleScreen() {
                   activeOpacity={0.8}
                 >
                   <Plus size={16} color={colors.primaryAccent} />
-                  <Text style={[styles.addBreakText, { color: colors.primaryAccent }]}>Add Break</Text>
+                  <Text style={[styles.addBreakText, { color: colors.primaryAccent }]}>{t("Add Break")}</Text>
                 </TouchableOpacity>
               </>
             ) : (
-              <Text style={[styles.closedText, { color: colors.textMuted }]}>Closed</Text>
+              <Text style={[styles.closedText, { color: colors.textMuted }]}>{t("Closed")}</Text>
             )}
           </View>
         );

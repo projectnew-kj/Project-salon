@@ -1,3 +1,4 @@
+import { useTranslation } from '../../../src/hooks/useTranslation';
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   Alert,
@@ -58,6 +59,7 @@ const normalizeImages = (value: string) =>
     .filter(Boolean);
 
 export default function AdminBannersScreen() {
+  const { t } = useTranslation();
   const { colors } = useThemeStore();
   const [banners, setBanners] = useState<CarouselBanner[]>([]);
   const [loading, setLoading] = useState(false);
@@ -74,7 +76,7 @@ export default function AdminBannersScreen() {
       const res = await apiClient.get('/admin/carousels');
       setBanners(Array.isArray(res.data.data) ? res.data.data : []);
     } catch {
-      Alert.alert('Error', 'Unable to fetch carousel banners');
+      Alert.alert(t('Error'), t('Unable to fetch carousel banners'));
     } finally {
       setLoading(false);
     }
@@ -111,11 +113,11 @@ export default function AdminBannersScreen() {
   const handleSave = async () => {
     const images = normalizeImages(form.images);
     if (!form.title.trim()) {
-      Alert.alert('Validation', 'Banner title is required.');
+      Alert.alert(t('Validation'), t('Banner title is required.'));
       return;
     }
     if (images.length === 0) {
-      Alert.alert('Validation', 'Add at least one image URL.');
+      Alert.alert(t('Validation'), t('Add at least one image URL.'));
       return;
     }
 
@@ -139,14 +141,14 @@ export default function AdminBannersScreen() {
       setModalVisible(false);
       await fetchBanners();
     } catch (error: any) {
-      Alert.alert('Error', error?.response?.data?.message || 'Unable to save carousel banner');
+      Alert.alert(t('Error'), error?.response?.data?.message || t('Unable to save carousel banner'));
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = (id: string) => {
-    Alert.alert('Delete Banner', 'Delete this promotional banner?', [
+    Alert.alert(t('Delete Banner'), t('Delete this promotional banner?'), [
       { text: 'Cancel', style: 'cancel' },
       {
         text: 'Delete',
@@ -156,7 +158,7 @@ export default function AdminBannersScreen() {
             await apiClient.delete(`/admin/carousels/${id}`);
             await fetchBanners();
           } catch (error: any) {
-            Alert.alert('Error', error?.response?.data?.message || 'Unable to delete banner');
+            Alert.alert(t('Error'), error?.response?.data?.message || t('Unable to delete banner'));
           }
         },
       },
@@ -167,12 +169,12 @@ export default function AdminBannersScreen() {
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.toolbar}>
         <View>
-          <Text style={[styles.heading, { color: colors.text }]}>Carousel Banners</Text>
-          <Text style={[styles.subheading, { color: colors.textSecondary }]}>Manage promotional images shown on the user home screen.</Text>
+          <Text style={[styles.heading, { color: colors.text }]}>{t("Carousel Banners")}</Text>
+          <Text style={[styles.subheading, { color: colors.textSecondary }]}>{t("Manage promotional images shown on the user home screen.")}</Text>
         </View>
         <TouchableOpacity style={[styles.addButton, { backgroundColor: colors.primaryAccent }]} onPress={openCreate}>
           <Plus size={18} color="#FFFFFF" />
-          <Text style={styles.addButtonText}>Add</Text>
+          <Text style={styles.addButtonText}>{t("Add")}</Text>
         </TouchableOpacity>
       </View>
 
@@ -251,7 +253,7 @@ export default function AdminBannersScreen() {
             textAlignVertical="top"
             style={styles.imagesInput}
           />
-          <Text style={[styles.helper, { color: colors.textMuted }]}>You can enter multiple URLs separated by commas or new lines. The first image is used as the admin thumbnail.</Text>
+          <Text style={[styles.helper, { color: colors.textMuted }]}>{t("You can enter multiple URLs separated by commas or new lines. The first image is used as the admin thumbnail.")}</Text>
           <Input
             label="CTA Action"
             placeholder="BOOK_NOW / OFFER_VIEW"
@@ -279,7 +281,7 @@ export default function AdminBannersScreen() {
             <View style={[styles.checkbox, { borderColor: colors.border, backgroundColor: form.isActive ? colors.primaryAccent : 'transparent' }]}>
               {form.isActive ? <Text style={styles.checkmark}>✓</Text> : null}
             </View>
-            <Text style={[styles.toggleText, { color: colors.text }]}>Show this banner to users</Text>
+            <Text style={[styles.toggleText, { color: colors.text }]}>{t("Show this banner to users")}</Text>
           </TouchableOpacity>
 
           <View style={styles.modalActions}>

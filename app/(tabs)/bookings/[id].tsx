@@ -1,3 +1,4 @@
+import { useTranslation } from '../../../src/hooks/useTranslation';
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
@@ -9,6 +10,7 @@ import { Button } from '../../../src/components/common/Button';
 import apiClient from '../../../src/api/apiClient';
 
 export default function AdminBookingDetailScreen() {
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors } = useThemeStore();
   const { updateStatus } = useAdminBookingStore();
@@ -22,7 +24,7 @@ export default function AdminBookingDetailScreen() {
       const res = await apiClient.get(`/admin/bookings/${id}`);
       setBooking(res.data.data);
     } catch (err) {
-      Alert.alert('Error', 'Unable to fetch booking details');
+      Alert.alert(t('Error'), t('Unable to fetch booking details'));
     } finally {
       setLoading(false);
     }
@@ -37,9 +39,9 @@ export default function AdminBookingDetailScreen() {
     try {
       await updateStatus(id, nextStatus);
       await fetchDetails();
-      Alert.alert('Success', `Status updated to ${nextStatus}`);
+      Alert.alert(t('Success'), `${t('Status updated to')} ${t(nextStatus, nextStatus)}`);
     } catch (err: any) {
-      Alert.alert('Transition Error', err.response?.data?.message || 'Action failed');
+      Alert.alert(t('Transition Error'), err.response?.data?.message || t('Action failed'));
     } finally {
       setActionLoading(false);
     }
@@ -64,7 +66,7 @@ export default function AdminBookingDetailScreen() {
         <View style={styles.divider} />
 
         {/* Customer Information */}
-        <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>Customer Information</Text>
+        <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>{t("Customer Information")}</Text>
         <View style={styles.infoRow}>
           <User size={18} color={colors.primaryAccent} />
           <Text style={[styles.infoText, { color: colors.text }]}>{booking.user?.name}</Text>
@@ -77,7 +79,7 @@ export default function AdminBookingDetailScreen() {
         <View style={styles.divider} />
 
         {/* Scheduled Slot */}
-        <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>Scheduled Slot</Text>
+        <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>{t("Scheduled Slot")}</Text>
         <View style={styles.infoRow}>
           <Calendar size={18} color={colors.primaryAccent} />
           <Text style={[styles.infoText, { color: colors.text }]}>{booking.bookingDate}</Text>
@@ -92,7 +94,7 @@ export default function AdminBookingDetailScreen() {
         <View style={styles.divider} />
 
         {/* Pricing */}
-        <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>Billing</Text>
+        <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>{t("Billing")}</Text>
         <View style={styles.infoRow}>
           <DollarSign size={18} color={colors.success} />
           <Text style={[styles.totalAmount, { color: colors.text }]}>₹{booking.totalAmount}</Text>

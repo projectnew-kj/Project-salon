@@ -1,3 +1,4 @@
+import { useTranslation } from '../../src/hooks/useTranslation';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, Alert } from 'react-native';
 import { router } from 'expo-router';
@@ -9,6 +10,7 @@ import { useThemeStore } from '../../src/store/useThemeStore';
 import apiClient from '../../src/api/apiClient';
 
 export default function AdminLoginScreen() {
+  const { t } = useTranslation();
   const { colors } = useThemeStore();
   const { setAuth } = useAdminAuthStore();
 
@@ -18,7 +20,7 @@ export default function AdminLoginScreen() {
 
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
-      Alert.alert('Validation Error', 'Please enter your email and password');
+      Alert.alert(t('Validation Error'), t('Please enter your email and password'));
       return;
     }
 
@@ -33,7 +35,7 @@ export default function AdminLoginScreen() {
       await setAuth(admin, tokens.accessToken, tokens.refreshToken);
       router.replace('/(tabs)');
     } catch (err: any) {
-      Alert.alert('Login Failed', err.response?.data?.message || 'Invalid administrator credentials');
+      Alert.alert(t('Login Failed'), err.response?.data?.message || t('Invalid administrator credentials'));
     } finally {
       setLoading(false);
     }
@@ -49,7 +51,7 @@ export default function AdminLoginScreen() {
           <View style={[styles.iconCircle, { backgroundColor: colors.surfaceSecondary }]}>
             <ShieldCheck size={48} color={colors.primaryAccent} />
           </View>
-          <Text style={[styles.title, { color: colors.text }]}>Admin Portal</Text>
+          <Text style={[styles.title, { color: colors.text }]}>{t("Admin Portal")}</Text>
           <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
             Salon & Haircut Operations Control
           </Text>

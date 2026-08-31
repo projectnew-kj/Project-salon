@@ -1,9 +1,11 @@
+import { useTranslation } from '../../../src/hooks/useTranslation';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { router } from 'expo-router';
 import {
   User,
   Users,
+  Globe,
   Moon,
   Sun,
   Smartphone,
@@ -16,16 +18,18 @@ import { useThemeStore } from '../../../src/store/useThemeStore';
 import { useAdminAuthStore } from '../../../src/store/useAdminAuthStore';
 import apiClient from '../../../src/api/apiClient';
 
+
 export default function AdminSettingsScreen() {
+  const { t } = useTranslation();
   const { colors, mode, setThemeMode } = useThemeStore();
   const { admin, logout } = useAdminAuthStore();
   const [loggingOut, setLoggingOut] = useState(false);
 
   const handleLogout = () => {
-    Alert.alert('Log Out', 'Are you sure you want to log out of the admin portal?', [
-      { text: 'Cancel', style: 'cancel' },
+    Alert.alert(t('Log Out'), t('admin.logout_confirm'), [
+      { text: t('Cancel'), style: 'cancel' },
       {
-        text: 'Log Out',
+        text: t('Log Out'),
         style: 'destructive',
         onPress: async () => {
           setLoggingOut(true);
@@ -62,7 +66,7 @@ export default function AdminSettingsScreen() {
       </View>
 
       {/* Appearance */}
-      <Text style={[styles.sectionLabel, { color: colors.textSecondary }]}>Appearance</Text>
+      <Text style={[styles.sectionLabel, { color: colors.textSecondary }]}>{t("Appearance")}</Text>
       <View style={[styles.themeRow, { backgroundColor: colors.surface, borderColor: colors.border }]}>
         {themeOptions.map((option) => {
           const isSelected = mode === option.key;
@@ -85,34 +89,40 @@ export default function AdminSettingsScreen() {
       </View>
 
       {/* Management */}
-      <Text style={[styles.sectionLabel, { color: colors.textSecondary }]}>Management</Text>
+      <Text style={[styles.sectionLabel, { color: colors.textSecondary }]}>{t('Management')}</Text>
       <View style={[styles.menuCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
         <TouchableOpacity style={styles.menuRow} onPress={() => router.push('/(tabs)/settings/users')}>
           <View style={styles.menuLeft}>
             <Users size={18} color={colors.primaryAccent} />
-            <Text style={[styles.menuText, { color: colors.text }]}>Customer Accounts</Text>
+            <Text style={[styles.menuText, { color: colors.text }]}>{t('Customer Accounts')}</Text>
           </View>
           <ChevronRight size={18} color={colors.textMuted} />
         </TouchableOpacity>
-
         <View style={[styles.divider, { backgroundColor: colors.border }]} />
-
+        <TouchableOpacity style={styles.menuRow} onPress={() => router.push('/(tabs)/settings/languages')}>
+          <View style={styles.menuLeft}>
+            <Globe size={18} color={colors.primaryAccent} />
+            <Text style={[styles.menuText, { color: colors.text }]}>{t('language.title')}</Text>
+          </View>
+          <ChevronRight size={18} color={colors.textMuted} />
+        </TouchableOpacity>
+        <View style={[styles.divider, { backgroundColor: colors.border }]} />
         <TouchableOpacity style={styles.menuRow} onPress={() => router.push('/(tabs)/banners')}>
           <View style={styles.menuLeft}>
             <Star size={18} color={colors.primaryAccent} />
-            <Text style={[styles.menuText, { color: colors.text }]}>Promotional Banners</Text>
+            <Text style={[styles.menuText, { color: colors.text }]}>{t('Promotional Banners')}</Text>
           </View>
           <ChevronRight size={18} color={colors.textMuted} />
         </TouchableOpacity>
       </View>
 
       {/* Account */}
-      <Text style={[styles.sectionLabel, { color: colors.textSecondary }]}>Account</Text>
+      <Text style={[styles.sectionLabel, { color: colors.textSecondary }]}>{t('Account')}</Text>
       <View style={[styles.menuCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-        <TouchableOpacity style={styles.menuRow} onPress={() => Alert.alert('Coming Soon', 'Password change is coming soon.')}>
+        <TouchableOpacity style={styles.menuRow} onPress={() => Alert.alert(t('Coming Soon'), t('Password change is coming soon.'))}>
           <View style={styles.menuLeft}>
             <Lock size={18} color={colors.primaryAccent} />
-            <Text style={[styles.menuText, { color: colors.text }]}>Change Password</Text>
+            <Text style={[styles.menuText, { color: colors.text }]}>{t("Change Password")}</Text>
           </View>
           <ChevronRight size={18} color={colors.textMuted} />
         </TouchableOpacity>
@@ -127,7 +137,7 @@ export default function AdminSettingsScreen() {
         </TouchableOpacity>
       </View>
 
-      <Text style={[styles.versionText, { color: colors.textMuted }]}>Salon Admin • v1.0.0</Text>
+      <Text style={[styles.versionText, { color: colors.textMuted }]}>{t("Salon Admin • v1.0.0")}</Text>
     </ScrollView>
   );
 }

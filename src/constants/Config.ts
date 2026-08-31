@@ -6,5 +6,7 @@ export const Config = {
     REFRESH_TOKEN: 'admin_refresh_token',
     ADMIN_USER: 'admin_user_data',
     THEME_PREF: 'admin_theme_preference',
+    LANGUAGE_PREF: 'admin_language_preference',
   }
 };
+export default Config;

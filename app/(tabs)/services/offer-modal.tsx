@@ -1,3 +1,4 @@
+import { useTranslation } from '../../../src/hooks/useTranslation';
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
@@ -11,6 +12,7 @@ import { Haircut } from '../../../src/types/service';
 const toDateInput = (isoDate?: string) => (isoDate ? isoDate.slice(0, 10) : '');
 
 export default function OfferModalScreen() {
+  const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors } = useThemeStore();
   const isEditing = !!id;
@@ -32,7 +34,7 @@ export default function OfferModalScreen() {
         const res = await apiClient.get('/admin/haircuts', { params: { isActive: true } });
         setAvailableHaircuts(res.data.data);
       } catch (err) {
-        Alert.alert('Error', 'Failed to load haircut catalog');
+        Alert.alert(t('Error'), t('Failed to load haircut catalog'));
       } finally {
         setFetchingCatalog(false);
       }
@@ -65,12 +67,12 @@ export default function OfferModalScreen() {
 
   const handleSave = async () => {
     if (!title.trim() || !originalPrice.trim() || !offerPrice.trim() || !validFrom || !validTo) {
-      Alert.alert('Validation Error', 'Title, prices, and valid date range are required');
+      Alert.alert(t('Validation Error'), t('Title, prices, and valid date range are required'));
       return;
     }
 
     if (selectedServiceIds.length === 0) {
-      Alert.alert('Validation Error', 'Select at least one haircut service for this bundle');
+      Alert.alert(t('Validation Error'), t('Select at least one haircut service for this bundle'));
       return;
     }
 
@@ -94,7 +96,7 @@ export default function OfferModalScreen() {
 
       router.back();
     } catch (err: any) {
-      Alert.alert('Error', err.response?.data?.message || 'Failed to save offer bundle');
+      Alert.alert(t('Error'), err.response?.data?.message || t('Failed to save offer bundle'));
     } finally {
       setLoading(false);
     }
@@ -118,9 +120,9 @@ export default function OfferModalScreen() {
       <Input label="Valid From (YYYY-MM-DD)" placeholder="2026-01-01" value={validFrom} onChangeText={setValidFrom} />
       <Input label="Valid To (YYYY-MM-DD)" placeholder="2026-12-31" value={validTo} onChangeText={setValidTo} />
 
-      <Text style={[styles.sectionLabel, { color: colors.textSecondary }]}>Included Services</Text>
+      <Text style={[styles.sectionLabel, { color: colors.textSecondary }]}>{t("Included Services")}</Text>
       {fetchingCatalog ? (
-        <Text style={[styles.hint, { color: colors.textMuted }]}>Loading haircut catalog...</Text>
+        <Text style={[styles.hint, { color: colors.textMuted }]}>{t("Loading haircut catalog...")}</Text>
       ) : (
         <View style={styles.servicesList}>
           {availableHaircuts.map((haircut) => {

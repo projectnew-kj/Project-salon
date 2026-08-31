@@ -5,8 +5,10 @@ import { Plus, Scissors, Gift, Edit2, Trash2, Clock } from 'lucide-react-native'
 import { useThemeStore } from '../../../src/store/useThemeStore';
 import apiClient from '../../../src/api/apiClient';
 import { EmptyState } from '@/components/common/EmptyState';
+import useTranslation from '@/hooks/useTranslation';
 
 export default function AdminServicesScreen() {
+  const { t } = useTranslation();
   const { colors } = useThemeStore();
   const [activeTab, setActiveTab] = useState<'haircuts' | 'offers'>('haircuts');
   const [haircuts, setHaircuts] = useState<any[]>([]);
@@ -24,7 +26,7 @@ export default function AdminServicesScreen() {
         setOffers(res.data.data);
       }
     } catch (err: any) {
-      Alert.alert('Error', 'Failed to fetch catalog data');
+      Alert.alert(t('Error'), t('Failed to fetch catalog data'));
     } finally {
       setLoading(false);
     }
@@ -35,7 +37,7 @@ export default function AdminServicesScreen() {
   }, [activeTab]);
 
   const handleDeleteHaircut = (id: string) => {
-    Alert.alert('Deactivate Service', 'Are you sure you want to deactivate this haircut?', [
+    Alert.alert(t('Deactivate Service'), t('Are you sure you want to deactivate this haircut?'), [
       { text: 'Cancel', style: 'cancel' },
       {
         text: 'Deactivate',
@@ -45,7 +47,7 @@ export default function AdminServicesScreen() {
             await apiClient.delete(`/admin/haircuts/${id}`);
             fetchData();
           } catch (err: any) {
-            Alert.alert('Error', 'Failed to deactivate service');
+            Alert.alert(t('Error'), t('Failed to deactivate service'));
           }
         },
       },

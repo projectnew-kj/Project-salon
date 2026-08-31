@@ -1,3 +1,4 @@
+import { useTranslation } from '../../../src/hooks/useTranslation';
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput, Alert, RefreshControl } from 'react-native';
 import { Search, Ban, CheckCircle } from 'lucide-react-native';
@@ -6,6 +7,7 @@ import apiClient from '../../../src/api/apiClient';
 import { AppUser } from '../../../src/types/admin';
 
 export default function AdminCustomersScreen() {
+  const { t } = useTranslation();
   const { colors } = useThemeStore();
   const [users, setUsers] = useState<AppUser[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -19,7 +21,7 @@ export default function AdminCustomersScreen() {
       const res = await apiClient.get('/admin/users', { params });
       setUsers(res.data.data);
     } catch {
-      Alert.alert('Error', 'Failed to fetch customers');
+      Alert.alert(t('Error'), t('Failed to fetch customers'));
     } finally {
       setLoading(false);
     }
@@ -45,7 +47,7 @@ export default function AdminCustomersScreen() {
               await apiClient.patch(`/admin/users/${user._id}/toggle-block`);
               fetchUsers();
             } catch {
-              Alert.alert('Error', 'Failed to update customer status');
+              Alert.alert(t('Error'), t('Failed to update customer status'));
             }
           },
         },
@@ -80,7 +82,7 @@ export default function AdminCustomersScreen() {
               <Text style={[styles.phone, { color: colors.textMuted }]}>{item.phone || 'No phone on file'}</Text>
               {item.isBlocked && (
                 <View style={styles.blockedBadge}>
-                  <Text style={styles.blockedText}>BLOCKED</Text>
+                  <Text style={styles.blockedText}>{t("BLOCKED")}</Text>
                 </View>
               )}
             </View>
@@ -101,7 +103,7 @@ export default function AdminCustomersScreen() {
         )}
         ListEmptyComponent={
           !loading ? (
-            <Text style={[styles.emptyText, { color: colors.textMuted }]}>No customers found</Text>
+            <Text style={[styles.emptyText, { color: colors.textMuted }]}>{t("No customers found")}</Text>
           ) : null
         }
       />

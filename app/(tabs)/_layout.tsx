@@ -3,11 +3,13 @@ import { Redirect, Tabs } from 'expo-router';
 import { LayoutDashboard, CalendarCheck, Scissors, Image as ImageIcon, Clock, Settings } from 'lucide-react-native';
 import { useAdminAuthStore } from '../../src/store/useAdminAuthStore';
 import { useThemeStore } from '../../src/store/useThemeStore';
+import { useTranslation } from '../../src/hooks/useTranslation';
 import { useAdminSocket } from '../../src/hooks/useAdminSocket';
 
 export default function TabsLayout() {
   const { isAuthenticated } = useAdminAuthStore();
   const { colors } = useThemeStore();
+  const { t } = useTranslation();
   useAdminSocket(); // Keep the real-time pipeline alive across the entire admin app
 
   if (!isAuthenticated) {
@@ -34,21 +36,21 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Dashboard',
+          title: t('admin.dashboard'),
           tabBarIcon: ({ color, size }) => <LayoutDashboard size={size} color={color} />,
         }}
       />
       <Tabs.Screen
         name="bookings"
         options={{
-          title: 'Bookings',
+          title: t('admin.bookings'),
           tabBarIcon: ({ color, size }) => <CalendarCheck size={size} color={color} />,
         }}
       />
       <Tabs.Screen
         name="services"
         options={{
-          title: 'Services',
+          title: t('admin.services'),
           tabBarIcon: ({ color, size }) => <Scissors size={size} color={color} />,
         }}
       />
@@ -56,7 +58,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="banners"
         options={{
-          title: 'Banners',
+          title: t('admin.banners'),
           tabBarIcon: ({ color, size }) => <ImageIcon size={size} color={color} />,
         }}
       />
@@ -64,14 +66,14 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="schedule"
         options={{
-          title: 'Schedule',
+          title: t('admin.schedule'),
           tabBarIcon: ({ color, size }) => <Clock size={size} color={color} />,
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
-          title: 'Settings',
+          title: t('admin.settings'),
           tabBarIcon: ({ color, size }) => <Settings size={size} color={color} />,
         }}
       />

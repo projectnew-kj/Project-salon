@@ -15,6 +15,7 @@ export default function SettingsStackLayout() {
     >
       <Stack.Screen name="index" options={{ title: 'Settings' }} />
       <Stack.Screen name="users" options={{ title: 'Customers' }} />
+      <Stack.Screen name="languages" options={{ title: 'Language Manager' }} />
     </Stack>
   );
 }
