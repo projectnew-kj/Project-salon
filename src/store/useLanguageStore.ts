@@ -4,7 +4,7 @@ import apiClient from '../api/apiClient';
 import { Config } from '../constants/Config';
 
 export interface AdminLanguage {
-  id: string;
+  _id: string;
   code: string;
   name: string;
   nativeName: string;

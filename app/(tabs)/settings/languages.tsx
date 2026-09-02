@@ -25,7 +25,7 @@ export default function LanguageManagerScreen() {
     if (!form.code.trim() || !form.name.trim() || !form.nativeName.trim()) { Alert.alert(t('common.error'), t('language.language_code')); return; }
     setSaving(true);
     try {
-      if (selected) await apiClient.patch(`/admin/languages/${selected.id}`, form);
+      if (selected) await apiClient.patch(`/admin/languages/${selected._id}`, form);
       else await apiClient.post('/admin/languages', { ...form, translations:{} });
       await refresh(); setMode(null); setSelected(null);
     } catch(e:any) { Alert.alert(t('common.error'), e.response?.data?.message || t('language.save_failed','Unable to save language')); }
@@ -33,24 +33,24 @@ export default function LanguageManagerScreen() {
   };
   const deleteLanguage = (item: AdminLanguage) => Alert.alert(t('common.delete'), t('language.delete_confirm'), [
     { text:t('common.cancel'), style:'cancel' },
-    { text:t('common.delete'), style:'destructive', onPress:async()=>{ try{ await apiClient.delete(`/admin/languages/${item.id}`); await refresh(); } catch(e:any){ Alert.alert(t('common.error'),e.response?.data?.message||t('common.error')); } } }
+    { text:t('common.delete'), style:'destructive', onPress:async()=>{ try{ await apiClient.delete(`/admin/languages/${item._id}`); await refresh(); } catch(e:any){ Alert.alert(t('common.error'),e.response?.data?.message||t('common.error')); } } }
   ]);
   const saveTranslation = async () => {
     if (!selected || !translation.key.trim()) return;
     setSaving(true);
-    try { await apiClient.put(`/admin/languages/${selected.id}/translations/${encodeURIComponent(translation.key.trim())}`, { key:translation.key.trim(), value:translation.value }); await refresh(); const latest=useLanguageStore.getState().languages.find(x=>x.id===selected.id)||null; setSelected(latest); setTranslation({key:'',value:''}); setMode(null); }
+    try { await apiClient.put(`/admin/languages/${selected._id}/translations/${encodeURIComponent(translation.key.trim())}`, { key:translation.key.trim(), value:translation.value }); await refresh(); const latest=useLanguageStore.getState().languages.find(x=>x._id===selected._id)||null; setSelected(latest); setTranslation({key:'',value:''}); setMode(null); }
     catch(e:any){ Alert.alert(t('common.error'),e.response?.data?.message||t('language.save_failed','Unable to save translation')); }
     finally{setSaving(false);}
   };
   const deleteTranslation = (key:string) => selected && Alert.alert(t('common.delete'), `${t('language.delete_confirm')}\n${key}`, [
     {text:t('common.cancel'),style:'cancel'},
-    {text:t('common.delete'),style:'destructive',onPress:async()=>{try{await apiClient.delete(`/admin/languages/${selected.id}/translations/${encodeURIComponent(key)}`);await refresh();setSelected(useLanguageStore.getState().languages.find(x=>x.id===selected.id)||null);}catch(e:any){Alert.alert(t('common.error'),e.response?.data?.message||t('common.error'));}}}
+    {text:t('common.delete'),style:'destructive',onPress:async()=>{try{await apiClient.delete(`/admin/languages/${selected._id}/translations/${encodeURIComponent(key)}`);await refresh();setSelected(useLanguageStore.getState().languages.find(x=>x._id===selected._id)||null);}catch(e:any){Alert.alert(t('common.error'),e.response?.data?.message||t('common.error'));}}}
   ]);
 
   return <View style={[styles.container,{backgroundColor:colors.background}]}> 
     <View style={styles.header}><View><Text style={[styles.title,{color:colors.text}]}>{t('language.title')}</Text><Text style={[styles.subtitle,{color:colors.textSecondary}]}>{t('language.subtitle')}</Text></View><TouchableOpacity style={[styles.add,{backgroundColor:colors.primaryAccent}]} onPress={openCreate}><Plus size={18} color="#fff"/><Text style={styles.addText}>{t('language.add_language')}</Text></TouchableOpacity></View>
     <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{padding:16,paddingBottom:40}}>
-      {sortedLanguages.map((item)=><View key={item.id} style={[styles.card,{backgroundColor:colors.surface,borderColor:colors.border}]}> 
+      {sortedLanguages.map((item)=><View key={item._id} style={[styles.card,{backgroundColor:colors.surface,borderColor:colors.border}]}> 
         <View style={styles.row}><View style={{flex:1}}><Text style={[styles.name,{color:colors.text}]}>{item.nativeName} · {item.code.toUpperCase()}</Text><Text style={[styles.meta,{color:colors.textMuted}]}>{item.name} · {Object.keys(item.translations||{}).length} {t('language.translations').toLowerCase()}</Text></View><View style={styles.actions}><TouchableOpacity onPress={()=>openEdit(item)}><Edit3 size={18} color={colors.primaryAccent}/></TouchableOpacity>{!item.isDefault&&<TouchableOpacity onPress={()=>deleteLanguage(item)}><Trash2 size={18} color={colors.danger}/></TouchableOpacity>}</View></View>
         {item.isDefault&&<Text style={[styles.defaultTag,{color:colors.primaryAccent}]}>{t('language.default')}</Text>}
         {Object.entries(item.translations||{}).slice(0,8).map(([key,value])=><View key={key} style={[styles.translationRow,{borderTopColor:colors.border}]}><View style={{flex:1}}><Text style={[styles.key,{color:colors.text}]}>{key}</Text><Text style={[styles.value,{color:colors.textSecondary}]} numberOfLines={2}>{value}</Text></View><TouchableOpacity onPress={()=>{setSelected(item);setTranslation({key,value});setMode('translation')}}><Edit3 size={16} color={colors.textMuted}/></TouchableOpacity><TouchableOpacity onPress={()=>deleteTranslation(key)}><Trash2 size={16} color={colors.danger}/></TouchableOpacity></View>)}
