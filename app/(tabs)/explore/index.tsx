@@ -8,6 +8,7 @@ import { HaircutCard } from '../../../src/components/home/HaircutCard';
 import { OfferCard } from '../../../src/components/home/OfferCard';
 import userApiClient from '../../../src/api/userApiClient';
 import { Haircut, Offer } from '../../../src/types';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type CatalogTab = 'haircuts' | 'offers';
 
@@ -19,6 +20,10 @@ export default function ExploreScreen() {
   const [haircuts, setHaircuts] = useState<Haircut[]>([]);
   const [offers, setOffers] = useState<Offer[]>([]);
   const [loading, setLoading] = useState(false);
+  const insets = useSafeAreaInsets();
+  
+  // Top inset equals the status bar height
+  const statusBarHeight = insets.top;
 
   const loadCatalog = useCallback(async () => {
     setLoading(true);
@@ -61,7 +66,7 @@ export default function ExploreScreen() {
   );
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={[styles.container, { backgroundColor: colors.background, marginTop: statusBarHeight }]}>
       <View style={styles.header}>
         <Text style={[styles.headerTitle, { color: colors.text }]}>{t('explore.title')}</Text>
         <View style={[styles.searchBox, { backgroundColor: colors.surface, borderColor: colors.border }]}>

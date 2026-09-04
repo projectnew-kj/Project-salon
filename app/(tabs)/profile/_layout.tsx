@@ -15,7 +15,7 @@ export default function ProfileStackLayout() {
         headerShadowVisible: false,
       }}
     >
-      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="index" options={{ title: t('home.profile') }} />
       <Stack.Screen name="language" options={{ title: t('home.language') }} />
     </Stack>
   );

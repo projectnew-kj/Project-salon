@@ -7,11 +7,16 @@ import { useThemeStore } from '../../src/store/useThemeStore';
 import { useUserAuthStore } from '../../src/store/useUserAuthStore';
 import { AnimatedBannerCarousel } from '../../src/components/home/AnimatedBannerCarousel';
 import userApiClient from '../../src/api/userApiClient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function UserHomeScreen() {
   const { t } = useTranslation();
   const { colors } = useThemeStore();
   const { user, isGuest } = useUserAuthStore();
+  const insets = useSafeAreaInsets();
+  
+  // Top inset equals the status bar height
+  const statusBarHeight = insets.top;
 
   const [banners, setBanners] = useState<any[]>([]);
   const [haircuts, setHaircuts] = useState<any[]>([]);
@@ -79,7 +84,7 @@ export default function UserHomeScreen() {
 
   return (
     <ScrollView
-      style={[styles.container, { backgroundColor: colors.background }]}
+      style={[styles.container, { backgroundColor: colors.background, marginTop: statusBarHeight }]}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primaryAccent} />}
       showsVerticalScrollIndicator={false}
     >

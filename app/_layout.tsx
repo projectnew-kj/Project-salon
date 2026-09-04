@@ -13,28 +13,48 @@ export default function RootLayout() {
   const { isDark, initializeTheme, colors } = useThemeStore();
   const { loadSavedLanguage } = useLanguageStore();
   const [ready, setReady] = useState(false);
-  const insets = useSafeAreaInsets();
-  
-  // Top inset equals the status bar height
-  const statusBarHeight = insets.top;
 
   useEffect(() => {
+    let mounted = true;
+
     (async () => {
-      await Promise.all([restoreSession(), initializeTheme(), loadSavedLanguage()]);
-      setReady(true);
+      // None of the bootstrap tasks may keep the native splash/loading screen forever.
+      await Promise.allSettled([restoreSession(), initializeTheme()]);
+
+      if (mounted) {
+        setReady(true);
+      }
+
+      // Language is intentionally non-blocking.
+      // English is already loaded locally, and the backend/cached language
+      // can update the UI after the app is visible.
+      void loadSavedLanguage().catch((error) => {
+        console.warn('[Language] background initialization failed:', error);
+      });
     })();
-  }, []);
+
+    return () => {
+      mounted = false;
+    };
+  }, [restoreSession, initializeTheme, loadSavedLanguage]);
 
   if (isLoading || !ready) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.background }}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: colors.background,
+        }}
+      >
         <ActivityIndicator size="large" color={colors.primaryAccent} />
       </View>
     );
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1, marginTop: statusBarHeight }}>
+    <GestureHandlerRootView style={{ flex: 1}}>
       <StatusBar style={isDark ? 'light' : 'dark'} backgroundColor={isDark ? "#000000" : "#FFFFFF"} />
       <Stack
         screenOptions={{

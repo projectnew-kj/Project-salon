@@ -52,3 +52,9 @@ npm run build:android:preview
 The production profile uses an App Bundle for Android and App Store distribution for iOS. EAS manages version incrementing for subsequent production builds.
 
 Before submission, complete the required Android/iOS store credentials and app-store metadata in the EAS project.
+
+## Startup / offline behavior
+
+The app must not wait for Socket.IO or the translation API before showing the app.
+English translations are bundled locally and are used as the initial fallback.
+Socket.IO is optional and only supplies real-time booking/notification updates.
