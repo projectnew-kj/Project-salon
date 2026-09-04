@@ -5,6 +5,7 @@ const ApiResponse = require('../../utils/apiResponse');
 const ApiError = require('../../utils/apiError');
 const asyncHandler = require('../../utils/asyncHandler');
 const httpStatusCodes = require('../../constants/httpStatusCodes');
+const tokenService = require('../../services/tokenService');
 
 const getAllUsers = asyncHandler(async (req, res) => {
   const { search, isBlocked, page = 1, limit = 20 } = req.query;
@@ -59,6 +60,24 @@ const getUserDetails = asyncHandler(async (req, res) => {
   );
 });
 
+
+const changeUserPassword = asyncHandler(async (req, res) => {
+  const { newPassword } = req.body;
+  const user = await User.findById(req.params.id).select('+password');
+
+  if (!user) {
+    throw new ApiError(httpStatusCodes.NOT_FOUND, 'User not found');
+  }
+
+  user.password = newPassword;
+  await user.save();
+  await tokenService.revokeAllUserSessions(user._id);
+
+  res.status(httpStatusCodes.OK).json(
+    new ApiResponse(httpStatusCodes.OK, 'User password changed successfully')
+  );
+});
+
 const toggleUserBlock = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
   if (!user) {
@@ -80,5 +99,6 @@ const toggleUserBlock = asyncHandler(async (req, res) => {
 module.exports = {
   getAllUsers,
   getUserDetails,
+  changeUserPassword,
   toggleUserBlock
 };

@@ -1,0 +1,17 @@
+{
+  "welcome": "अपनी शैली खोजें",
+  "bookNow": "अपॉइंटमेंट बुक करें",
+  "popularServices": "लोकप्रिय हेयरकट",
+  "specialOffers": "विशेष पैकेज",
+  "selectSlot": "तारीख और समय चुनें",
+  "myBookings": "मेरी बुकिंग",
+  "profile": "प्रोफ़ाइल",
+  "reviews": "रेटिंग और समीक्षाएं",
+  "guestMode": "अतिथि ब्राउज़िंग",
+  "loginToBook": "बुक करने के लिए साइन इन करें",
+  "pending": "पुष्टि लंबित",
+  "confirmed": "पुष्टि हो गई",
+  "inProgress": "प्रगति में",
+  "completed": "पूर्ण",
+  "cancelled": "रद्द"
+}

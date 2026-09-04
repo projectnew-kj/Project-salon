@@ -23,6 +23,12 @@ const refreshTokenSchema = Joi.object({
   })
 });
 
+const setUserPasswordSchema = Joi.object({
+  body: Joi.object({
+    newPassword: Joi.string().min(8).max(128).required()
+  })
+});
+
 const changePasswordSchema = Joi.object({
   body: Joi.object({
     currentPassword: Joi.string().required(),
@@ -45,5 +51,6 @@ module.exports = {
   loginSchema,
   refreshTokenSchema,
   changePasswordSchema,
+  setUserPasswordSchema,
   updateProfileSchema
 };

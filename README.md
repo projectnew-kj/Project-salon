@@ -127,3 +127,19 @@ Verify access/refresh token configuration and device time.
 
 ### Socket notifications do not arrive
 Verify `EXPO_PUBLIC_SOCKET_URL`, WebSocket connectivity, and that the access token is valid.
+
+## Sample Seeder
+
+Run the idempotent sample dataset with:
+
+```bash
+npm run seed:sample
+```
+
+Sample credentials:
+- Admin: `admin@salon.com` / value of `DEFAULT_ADMIN_PASSWORD` (default: `Admin@Secure2026!`)
+- User 1: `user1@salon.com` / `User@12345`
+- User 2: `user2@salon.com` / `User@12345`
+- User 3: `user3@salon.com` / `User@12345`
+
+The seed creates sample languages/translations, users, admin, services, offers, banners, availability, bookings, reviews, notifications, and refresh-token test records. Change the sample passwords before production use.

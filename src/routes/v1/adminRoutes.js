@@ -78,6 +78,7 @@ router.patch(
 // User Management
 router.get('/users', adminUserController.getAllUsers);
 router.get('/users/:id', adminUserController.getUserDetails);
+router.post('/users/:id/change-password', validate(authValidation.setUserPasswordSchema), adminUserController.changeUserPassword);
 router.patch('/users/:id/toggle-block', adminUserController.toggleUserBlock);
 
 // Reviews Management

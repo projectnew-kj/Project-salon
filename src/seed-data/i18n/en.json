@@ -1,0 +1,17 @@
+{
+  "welcome": "Find your style",
+  "bookNow": "Book Appointment",
+  "popularServices": "Trending Haircuts",
+  "specialOffers": "Special Packages",
+  "selectSlot": "Select Date & Time",
+  "myBookings": "My Bookings",
+  "profile": "Profile",
+  "reviews": "Ratings & Reviews",
+  "guestMode": "Guest Browsing",
+  "loginToBook": "Sign in to book this slot",
+  "pending": "Pending Confirmation",
+  "confirmed": "Confirmed",
+  "inProgress": "In Progress",
+  "completed": "Completed",
+  "cancelled": "Cancelled"
+}

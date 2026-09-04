@@ -259,6 +259,14 @@ async function upsertCarousels(offers, haircuts) {
   return result;
 }
 
+function loadSeedJson(code) {
+  try {
+    return require(`../seed-data/i18n/${code}.json`);
+  } catch {
+    return {};
+  }
+}
+
 async function seedLanguages() {
   const languages = [
     { code: 'en', name: 'English', nativeName: 'English', isDefault: true },
@@ -267,10 +275,25 @@ async function seedLanguages() {
     { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', isDefault: false },
     { code: 'kn', name: 'Kannada', nativeName: 'ಕನ್ನಡ', isDefault: false }
   ];
+
   for (const data of languages) {
+    // The JSON files are seed/reference input only. Runtime translation data
+    // is stored in MongoDB and managed by the admin language CRUD.
+    const jsonTranslations = loadSeedJson(data.code);
+    const translations = {
+      ...(defaultTranslations[data.code] || {}),
+      ...jsonTranslations
+    };
+
     await Language.updateOne(
       { code: data.code },
-      { $set: { ...data, isActive: true, translations: defaultTranslations[data.code] || {} } },
+      {
+        $set: {
+          ...data,
+          isActive: true,
+          translations
+        }
+      },
       { upsert: true }
     );
   }
@@ -487,7 +510,7 @@ async function seed() {
     }),
     tertiary: await upsertUser({
       name: 'Vikram Singh', email: 'user3@salon.com', password: 'User@12345', phone: '+919876543212',
-      profileImage: IMAGE.haircut3, preferredLanguage: 'hi', themePreference: 'dark', isActive: true, isBlocked: false
+      profileImage: '', preferredLanguage: 'hi', themePreference: 'dark', isActive: true, isBlocked: false
     })
   };
 
