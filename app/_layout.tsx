@@ -6,18 +6,12 @@ import { useAdminAuthStore } from '../src/store/useAdminAuthStore';
 import { useThemeStore } from '../src/store/useThemeStore';
 import { useLanguageStore } from '../src/store/useLanguageStore';
 import { Loader } from '../src/components/common/Loader';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function RootLayout() {
   const { restoreSession, isLoading } = useAdminAuthStore();
   const { isDark, initializeTheme, colors } = useThemeStore();
   const { initialize: initializeLanguage } = useLanguageStore();
   const [themeReady, setThemeReady] = useState(false);
-
-    const insets = useSafeAreaInsets();
-    
-    // Top inset equals the status bar height
-    const statusBarHeight = insets.top;
 
   useEffect(() => {
     (async () => {

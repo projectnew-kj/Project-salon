@@ -19,7 +19,6 @@ import {
 import { useThemeStore } from "../../src/store/useThemeStore";
 import { useAdminAuthStore } from "../../src/store/useAdminAuthStore";
 import { useAdminBookingStore } from "../../src/store/useAdminBookingStore";
-import { useAdminSocket } from "../../src/hooks/useAdminSocket";
 import { StatusBadge } from "../../src/components/common/StatusBadge";
 import apiClient from "../../src/api/apiClient";
 import { EmptyState } from "@/components/common/EmptyState";
@@ -28,7 +27,6 @@ export default function AdminDashboardScreen() {
   const { colors } = useThemeStore();
   const { admin } = useAdminAuthStore();
   const { bookings, fetchBookings } = useAdminBookingStore();
-  useAdminSocket(); // Connect and maintain real-time event pipeline
 
   const [refreshing, setRefreshing] = useState(false);
   const [metrics, setMetrics] = useState({

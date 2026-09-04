@@ -17,6 +17,8 @@ EXPO_PUBLIC_API_URL=<production REST API URL>
 EXPO_PUBLIC_SOCKET_URL=<production Socket.IO URL>
 ```
 
+The app does not depend on Socket.IO for startup. If the live socket cannot connect, the admin UI remains usable and English is used as the safe language fallback.
+
 Do not commit `.env` files containing credentials or private values.
 
 ## 3. Authenticate EAS

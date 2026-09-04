@@ -25,8 +25,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0F172A"
       },
-      "package": "com.salonapp.admin",
-      "versionCode": 1
+      "package": "com.salonapp.admin"
     },
     "web": {
       "bundler": "metro",
@@ -43,7 +42,11 @@
     "extra": {
       "router": {
         "origin": false
+      },
+      "eas": {
+        "projectId": "6af1b304-74ed-44fa-bd9b-ffb5d6a9091c"
       }
-    }
+    },
+    "newArchEnabled": false
   }
 }
