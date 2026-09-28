@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import userApiClient from '../api/userApiClient';
-import enTranslations from '../i18n/en.json';
 
 export interface SupportedLanguage {
   code: string;
@@ -26,7 +25,7 @@ interface LanguageState {
 const CACHE_PREFIX = 'salon_translations_';
 const cacheKey = (lang: string) => `${CACHE_PREFIX}${lang}`;
 
-const ENGLISH: Dict = enTranslations as Dict;
+const ENGLISH: Dict = {};
 
 const readCachedTranslations = async (code: string): Promise<Dict | null> => {
   try {
@@ -48,7 +47,7 @@ const saveCachedTranslations = async (code: string, translations: Dict) => {
 };
 
 export const useLanguageStore = create<LanguageState>((set, get) => ({
-  // English is always the first safe language.
+  // English is the safe default language code. Translation text is loaded from MongoDB.
   currentLanguage: 'en',
   translations: ENGLISH,
   languages: [],

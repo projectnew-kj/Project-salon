@@ -18,6 +18,7 @@ interface UserAuthState {
   isGuest: boolean;
   isLoading: boolean;
   setAuth: (user: UserData, accessToken: string, refreshToken: string) => Promise<void>;
+  setUser: (user: UserData) => Promise<void>;
   setGuest: () => void;
   logout: () => Promise<void>;
   restoreSession: () => Promise<void>;
@@ -29,6 +30,11 @@ export const useUserAuthStore = create<UserAuthState>((set) => ({
   isAuthenticated: false,
   isGuest: true,
   isLoading: true,
+
+  setUser: async (user) => {
+    await SecureStore.setItemAsync('user_profile_data', JSON.stringify(user));
+    set({ user });
+  },
 
   setAuth: async (user, accessToken, refreshToken) => {
     await SecureStore.setItemAsync('user_access_token', accessToken);

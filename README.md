@@ -46,7 +46,7 @@ src/
 ```
 
 ## Multilingual Architecture
-The app does **not** contain `src/i18n/*.json` translation files.
+The app does **not** ship runtime translation JSON files. Translation JSON is seed/reference data only; runtime translations come from MongoDB.
 
 Translations are loaded from the backend:
 ```text
