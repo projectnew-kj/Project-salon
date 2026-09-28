@@ -15,8 +15,9 @@ export default function RootLayout() {
 
   useEffect(() => {
     (async () => {
-      await Promise.all([restoreSession(), initializeTheme(), initializeLanguage()]);
+      await Promise.allSettled([restoreSession(), initializeTheme()]);
       setThemeReady(true);
+      void initializeLanguage().catch(() => undefined);
     })();
   }, []);
 

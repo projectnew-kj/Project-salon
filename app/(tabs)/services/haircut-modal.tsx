@@ -5,6 +5,7 @@ import { Input } from '../../../src/components/common/Input';
 import { Button } from '../../../src/components/common/Button';
 import { useThemeStore } from '../../../src/store/useThemeStore';
 import apiClient from '../../../src/api/apiClient';
+import useTranslation from '@/hooks/useTranslation';
 
 export default function HaircutModalScreen() {
   const { t } = useTranslation();

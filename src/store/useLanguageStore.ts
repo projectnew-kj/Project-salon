@@ -5,6 +5,7 @@ import { Config } from '../constants/Config';
 
 export interface AdminLanguage {
   _id: string;
+  id?: string;
   code: string;
   name: string;
   nativeName: string;
@@ -25,6 +26,18 @@ interface State {
 
 const DEFAULT_LANGUAGE = 'en';
 const cacheKey = (code: string) => `admin_translations_${code}`;
+
+const normalizeLanguage = (item: any): AdminLanguage => ({
+  ...item,
+  _id: String(item?._id || item?.id || ''),
+  id: item?.id || item?._id,
+  translations: item?.translations && typeof item.translations === 'object' ? item.translations : {},
+});
+
+const extractLanguages = (data: any): AdminLanguage[] => {
+  const raw = Array.isArray(data) ? data : (Array.isArray(data?.items) ? data.items : []);
+  return raw.map(normalizeLanguage).filter((item: any) => item._id);
+};
 
 export const useLanguageStore = create<State>((set, get) => ({
   // English is always the safe startup language.
@@ -137,9 +150,7 @@ export const useLanguageStore = create<State>((set, get) => ({
     void (async () => {
       try {
         const response = await apiClient.get('/languages');
-        const languages = Array.isArray(response.data?.data)
-          ? response.data.data
-          : [];
+        const languages = extractLanguages(response.data?.data);
 
         set({ languages });
 
@@ -173,9 +184,7 @@ export const useLanguageStore = create<State>((set, get) => ({
     try {
       const response = await apiClient.get('/languages');
       set({
-        languages: Array.isArray(response.data?.data)
-          ? response.data.data
-          : [],
+        languages: extractLanguages(response.data?.data),
       });
     } catch {
       // Language manager refresh is non-critical.

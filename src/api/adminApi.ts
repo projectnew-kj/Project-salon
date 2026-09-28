@@ -67,6 +67,8 @@ export const getUsers = (params: { search?: string; isBlocked?: boolean; page?: 
 export const getUserDetails = (id: string) => apiClient.get(`/admin/users/${id}`);
 
 export const toggleUserBlock = (id: string) => apiClient.patch(`/admin/users/${id}/toggle-block`);
+export const changeUserPassword = (id: string, newPassword: string) =>
+  apiClient.post(`/admin/users/${id}/change-password`, { newPassword });
 
 // --- Availability ---
 export const getAvailability = () => apiClient.get('/admin/availability');
@@ -115,6 +117,7 @@ export default {
   getUsers,
   getUserDetails,
   toggleUserBlock,
+  changeUserPassword,
   getAvailability,
   updateAvailability,
   getReviews,

@@ -17,6 +17,7 @@ interface AdminAuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   setAuth: (admin: AdminUser, accessToken: string, refreshToken: string) => Promise<void>;
+  setAdmin: (admin: AdminUser) => void;
   logout: () => Promise<void>;
   restoreSession: () => Promise<void>;
 }
@@ -26,6 +27,8 @@ export const useAdminAuthStore = create<AdminAuthState>((set) => ({
   accessToken: null,
   isAuthenticated: false,
   isLoading: true,
+
+  setAdmin: (admin) => set({ admin }),
 
   setAuth: async (admin, accessToken, refreshToken) => {
     await SecureStore.setItemAsync(Config.STORAGE_KEYS.ACCESS_TOKEN, accessToken);
